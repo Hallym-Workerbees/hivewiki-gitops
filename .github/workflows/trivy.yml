@@ -1,4 +1,4 @@
-game: Trivy Security Scan
+name: Trivy Security Scan
 
 on:
   pull_request:
