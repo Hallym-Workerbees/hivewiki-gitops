@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Env files
+.env
+.env.*
+
+# Kubernetes
+*.secret.yaml
+
+# Logs
+*.log
+
+# Misc
+*.swp
+*.swo
