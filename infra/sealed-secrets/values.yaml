@@ -1,0 +1,3 @@
+image:
+  registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: docker-hub/bitnami/sealed-secrets-controller
