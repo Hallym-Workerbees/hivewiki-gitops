@@ -3,5 +3,3 @@ manager:
     registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
     repository: docker-hub/kubegreen/kube-green
     tag: "0.7.1"
-
-  hostNetwork: true
