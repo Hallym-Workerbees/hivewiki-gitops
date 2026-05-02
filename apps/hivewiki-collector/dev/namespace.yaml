@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: hivewiki-collector-dev
-  labels:
-    app.kubernetes.io/name: hivewiki-collector
-    app.kubernetes.io/part-of: hivewiki
-    environment: dev
