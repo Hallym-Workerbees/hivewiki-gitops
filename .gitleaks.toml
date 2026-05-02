@@ -1,0 +1,2 @@
+[allowlist]
+paths = ['''.*sealedsecret.*\.ya?ml''']
