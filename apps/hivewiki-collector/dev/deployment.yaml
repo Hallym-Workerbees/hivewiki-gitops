@@ -33,6 +33,15 @@ spec:
         - name: hivewiki-collector
           image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-135fb3b
           imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           resources:
             requests:
               cpu: 300m
@@ -41,3 +50,10 @@ spec:
               cpu: 500m
               memory: 1Gi
       restartPolicy: Always
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: tmp
+          emptyDir: {}
