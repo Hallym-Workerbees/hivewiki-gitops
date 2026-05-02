@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hivewiki-collector-config
+  namespace: hivewiki-collector-dev
+  labels:
+    app.kubernetes.io/name: hivewiki-collector
+    app.kubernetes.io/part-of: hivewiki
+    environment: dev
+data:
+  DB_HOST: "hivewiki-dev.c7kkg8a0sdsw.ap-northeast-2.rds.amazonaws.com"
+  DB_PORT: "5432"
+  DB_NAME: "hivewiki"
+  DB_USER: "hivewiki"
+  DB_RECONNECT_SLEEP_SECONDS: "5"
+  REDIS_QUEUE_NAME: wikify_queue
+  REDIS_SOCKET_TIMEOUT_SECONDS: "5"
+  REDIS_HEALTH_CHECK_INTERVAL_SECONDS: "30"
+  LOOP_SLEEP_SECONDS: "5"
+  SOURCE_BATCH_SIZE: "50"
+  INITIAL_BACKFILL_LIMIT: "100"
+  INCREMENTAL_FETCH_LIMIT: "10"
+  QUEUE_BATCH_SIZE: "100"
+  JOB_PUBLISH_CLAIM_TIMEOUT_SECONDS: "300"
+  MAX_RETRY_COUNT: "3"
+  HTTP_TIMEOUT_SECONDS: "15"
+  USER_AGENT: HiveWiki-Collector/0.1

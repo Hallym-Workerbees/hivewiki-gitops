@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hivewiki-collector
+  namespace: hivewiki-collector-dev
+  labels:
+    app: hivewiki-collector
+    app.kubernetes.io/name: hivewiki-collector
+    app.kubernetes.io/part-of: hivewiki
+    environment: dev
+spec:
+  selector:
+    matchLabels:
+      app: hivewiki-collector
+      environment: dev
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: hivewiki-collector
+      labels:
+        app: hivewiki-collector
+        app.kubernetes.io/name: hivewiki-collector
+        app.kubernetes.io/part-of: hivewiki
+        environment: dev
+    spec:
+      containers:
+        - name: hivewiki-collector
+          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-135fb3b
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              cpu: 300m
+              memory: 500Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+      restartPolicy: Always
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: tmp
+          emptyDir: {}
