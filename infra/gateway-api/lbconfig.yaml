@@ -1,0 +1,12 @@
+apiVersion: gateway.k8s.aws/v1beta1
+kind: LoadBalancerConfiguration
+metadata:
+  name: alb-config
+  namespace: kube-system
+spec:
+  scheme: internet-facing
+  ipAddressType: ipv4
+  listenerConfigurations:
+    - protocolPort: HTTPS:443
+      defaultCertificate: arn:aws:acm:ap-northeast-2:647502392199:certificate/7ada3013-3056-4fca-9d5b-942153961717
+      sslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
