@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: hivewiki-collector
-          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-97c9d91
+          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-8f7fd7c
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
