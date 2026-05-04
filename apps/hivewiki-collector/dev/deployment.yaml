@@ -35,9 +35,9 @@ spec:
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
-              name: hivewiki-collector-config
+              name: hivewiki-collector-dev-env
             - secretRef:
-              name: hivewiki-collector-secret
+              name: hivewiki-collector-dev-secret
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
