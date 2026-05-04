@@ -33,6 +33,11 @@ spec:
         - name: hivewiki-collector
           image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-8f7fd7c
           imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+              name: hivewiki-collector-config
+            - secretRef:
+              name: hivewiki-collector-secret
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
