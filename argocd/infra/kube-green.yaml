@@ -23,6 +23,19 @@ spec:
     server: https://kubernetes.default.svc
     namespace: kube-green
 
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: sleepinfos.kube-green.com
+      jsonPointers:
+        - /metadata/annotations/creationTimestamp
+
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: kube-green-manager-role
+      jsonPointers:
+        - /rules
+
   syncPolicy:
     automated:
       prune: true
