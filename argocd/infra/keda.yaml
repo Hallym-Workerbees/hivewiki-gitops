@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keda
+  namespace: argocd
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://github.com/Hallym-Workerbees/hivewiki-gitops
+      targetRevision: main
+      ref: values
+
+    - repoURL: https://kedacore.github.io/charts
+      chart: keda
+      targetRevision: 2.19.0
+      helm:
+        releaseName: keda
+        valueFiles:
+          - $values/infra/keda/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: keda
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
