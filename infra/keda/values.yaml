@@ -1,0 +1,14 @@
+image:
+  pullPolicy: IfNotPresent
+
+  keda:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: ghcr/kedacore/keda
+
+  metricsApiServer:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: ghcr/kedacore/keda-metrics-apiserver
+
+  webhooks:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: ghcr/kedacore/keda-admission-webhooks
