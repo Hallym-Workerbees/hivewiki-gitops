@@ -1,0 +1,21 @@
+provider:
+  name: aws
+
+serviceAccount:
+  create: true
+  name: external-dns
+
+sources:
+  - gateway-httproute
+
+env:
+  - name: AWS_DEFAULT_REGION
+    value: ap-northeast-2
+
+domainFilters:
+  - hive-wiki.com
+
+policy: upsert-only
+
+registry: txt
+txtOwnerId: hivewiki-dev
