@@ -1,0 +1,17 @@
+apiVersion: gateway.k8s.aws/v1beta1
+kind: TargetGroupConfiguration
+metadata:
+  name: hivewiki-web
+  namespace: hivewiki-web-dev
+spec:
+  targetReference:
+    group: ""
+    kind: Service
+    name: hivewiki-web
+  defaultConfiguration:
+    targetType: ip
+    healthCheckConfig:
+      healthCheckPath: /
+      healthCheckProtocol: http
+      matcher:
+        httpCode: 200-399
