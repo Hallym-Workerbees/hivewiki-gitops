@@ -19,3 +19,6 @@ policy: upsert-only
 
 registry: txt
 txtOwnerId: hivewiki-dev
+
+image:
+  repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/k8s/external-dns/external-dns
