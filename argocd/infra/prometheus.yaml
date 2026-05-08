@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://github.com/Hallym-Workerbees/hivewiki-gitops
+      targetRevision: main
+      ref: values
+
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: prometheus
+      targetRevision: 29.6.0
+      helm:
+        releaseName: prometheus
+        valueFiles:
+          - $values/infra/monitoring/prometheus/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
