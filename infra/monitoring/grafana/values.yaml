@@ -1,0 +1,26 @@
+image:
+  registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: docker-hub/grafana/grafana
+  pullPolicy: IfNotPresent
+
+testFramework:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: docker-hub/bats/bats
+
+downloadDashboardsImage:
+  registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: docker-hub/curlimages/curl
+  pullPolicy: IfNotPresent
+
+initChownData:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: docker-hub/library/busybox
+    pullPolicy: IfNotPresent
+
+sidecar:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: quay/kiwigrid/k8s-sidecar
+  imagePullPolicy: IfNotPresent
