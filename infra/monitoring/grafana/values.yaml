@@ -24,3 +24,8 @@ sidecar:
     registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
     repository: quay/kiwigrid/k8s-sidecar
   imagePullPolicy: IfNotPresent
+
+persistence:
+  enabled: true
+  storageClassName: gp3
+  size: 10Gi

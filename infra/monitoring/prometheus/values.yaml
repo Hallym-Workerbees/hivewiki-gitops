@@ -9,11 +9,15 @@ server:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/prometheus
     pullPolicy: IfNotPresent
+  persistentVolume:
+    storageClass: gp3
 
 alertmanager:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/alertmanager
     pullPolicy: IfNotPresent
+  persistence:
+    storageClass: gp3
 
 kube-state-metrics:
   image:
