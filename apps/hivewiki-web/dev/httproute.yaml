@@ -19,6 +19,20 @@ spec:
   hostnames:
     - test.hive-wiki.com
   rules:
-    - backendRefs:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /metrics
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: gateway.k8s.aws
+            kind: ListenerRuleConfiguration
+            name: deny-metrics
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
         - name: hivewiki-web
           port: 80
