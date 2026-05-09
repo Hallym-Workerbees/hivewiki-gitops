@@ -11,7 +11,7 @@ spec:
   defaultConfiguration:
     targetType: ip
     healthCheckConfig:
-      healthCheckPath: /livez
+      healthCheckPath: /livez/
       healthCheckProtocol: http
       matcher:
         httpCode: 200-399
