@@ -36,7 +36,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: hivewiki-web
-          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web:dev-e10a5ab
+          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web:dev-837670c
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
