@@ -31,3 +31,13 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: hivewiki-web-dev
+    - name: argocd-webhook
+      protocol: HTTPS
+      port: 443
+      hostname: argocd.hive-wiki.com
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: argocd
