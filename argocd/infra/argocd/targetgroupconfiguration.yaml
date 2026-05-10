@@ -1,0 +1,18 @@
+
+apiVersion: gateway.k8s.aws/v1beta1
+kind: TargetGroupConfiguration
+metadata:
+  name: argocd-webhook
+  namespace: argocd
+spec:
+  targetReference:
+    group: ""
+    kind: Service
+    name: argocd-server
+  defaultConfiguration:
+    targetType: ip
+    healthCheckConfig:
+      healthCheckPath: /healthz
+      healthCheckProtocol: http
+      matcher:
+        httpCode: 200-399
