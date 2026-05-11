@@ -1,0 +1,3 @@
+image:
+  repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/argoprojlabs/argocd-image-updater
+  pullPolicy: IfNotPresent
