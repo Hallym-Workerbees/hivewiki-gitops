@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: keda
+  name: argocd-image-updater
   namespace: argocd
 spec:
   project: default
@@ -11,22 +11,19 @@ spec:
       targetRevision: main
       ref: values
 
-    - repoURL: https://kedacore.github.io/charts
-      chart: keda
-      targetRevision: 2.19.0
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argocd-image-updater
+      targetRevision: 1.1.5
       helm:
-        releaseName: keda
+        releaseName: argocd-image-updater
         valueFiles:
-          - $values/infra/keda/values.yaml
+          - $values/infra/argocd-image-updater/values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: keda
+    namespace: argocd
 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
