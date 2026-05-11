@@ -1,0 +1,31 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: hivewiki-dev
+  namespace: argocd
+spec:
+  writeBackConfig:
+    method: "argocd"
+
+  applicationRefs:
+    - namePattern: "hivewiki-web-dev"
+      images:
+        - alias: "hivewiki-web-dev"
+          imageName: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web"
+          commonUpdateSettings:
+            updateStrategy: "newest-build"
+            allowTags: "regexp:^dev-[0-9a-f]{7}$"
+          manifestTargets:
+            kustomize:
+              name: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web"
+
+    - namePattern: "hivewiki-collector-dev"
+      images:
+        - alias: "hivewiki-collector-dev"
+          imageName: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector"
+          commonUpdateSettings:
+            updateStrategy: "newest-build"
+            allowTags: "regexp:^dev-[0-9a-f]{7}$"
+          manifestTargets:
+            kustomize:
+              name: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector"
