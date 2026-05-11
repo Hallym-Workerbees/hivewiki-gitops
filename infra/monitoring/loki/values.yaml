@@ -1,0 +1,56 @@
+deploymentMode: Monolithic
+
+loki:
+  auth_enabled: false
+
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: docker-hub/grafana/loki
+    pullPolicy: IfNotPresent
+
+  commonConfig:
+    replication_factor: 1
+
+  storage:
+    type: filesystem
+
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+singleBinary:
+  replicas: 1
+  persistence:
+    enabled: true
+    storageClass: gp3
+    size: 10Gi
+
+gateway:
+  enabled: true
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: docker-hub/nginxinc/nginx-unprivileged
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+
+lokiCanary:
+  enabled: false
+
+test:
+  enabled: false
+
+chunksCache:
+  enabled: false
+
+resultsCache:
+  enabled: false
+
+minio:
+  enabled: false
