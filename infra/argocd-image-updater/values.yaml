@@ -4,8 +4,18 @@ image:
 
 config:
   log.level: debug
+  registries:
+   - name: ECR
+     api_url: https://647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+     prefix: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+     credentials: ext:/scripts/ecr-login.sh
+     credsexpire: 10h
 
 metrics:
   enabled: true
   serviceMonitor:
     enabled: false
+
+serviceAccount:
+  create: true
+  name: argocd-image-updater
