@@ -102,7 +102,7 @@ spec:
                   value: test.hive-wiki.com
                 - name: X-Forwarded-Proto
                   value: https
-            periodSeconds: 5
+            periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
       volumes:
