@@ -69,6 +69,42 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /livez/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: test.hive-wiki.com
+                - name: X-Forwarded-Proto
+                  value: https
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 24
+          livenessProbe:
+            httpGet:
+              path: /livez/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: test.hive-wiki.com
+                - name: X-Forwarded-Proto
+                  value: https
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: test.hive-wiki.com
+                - name: X-Forwarded-Proto
+                  value: https
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
       volumes:
         - name: tmp
           emptyDir: {}
