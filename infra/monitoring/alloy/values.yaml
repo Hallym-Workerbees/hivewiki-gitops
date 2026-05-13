@@ -1,0 +1,67 @@
+image:
+  registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: docker-hub/grafana/alloy
+  pullPolicy: IfNotPresent
+
+configReloader:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: quay/prometheus-operator/prometheus-config-reloader
+    pullPolicy: IfNotPresent
+
+alloy:
+  configMap:
+    create: true
+    content: |
+      discovery.kubernetes "pods" {
+        role = "pod"
+      }
+
+      discovery.relabel "pod_logs" {
+        targets = discovery.kubernetes.pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app"]
+          target_label  = "app"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+          separator     = "/"
+          replacement   = "/var/log/pods/*$1/*.log"
+          target_label  = "__path__"
+        }
+      }
+
+      loki.source.file "pod_logs" {
+        targets    = discovery.relabel.pod_logs.output
+        forward_to = [loki.write.default.receiver]
+      }
+
+      loki.write "default" {
+        endpoint {
+          url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
+        }
+      }
+
+  mounts:
+    varlog: true
+    dockercontainers: true
+
+serviceMonitor:
+  enabled: false
