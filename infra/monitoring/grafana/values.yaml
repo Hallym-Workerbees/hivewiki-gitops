@@ -1,0 +1,46 @@
+image:
+  registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: docker-hub/grafana/grafana
+  pullPolicy: IfNotPresent
+
+testFramework:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: docker-hub/bats/bats
+
+downloadDashboardsImage:
+  registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: docker-hub/curlimages/curl
+  pullPolicy: IfNotPresent
+
+initChownData:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: docker-hub/library/busybox
+    pullPolicy: IfNotPresent
+
+sidecar:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: quay/kiwigrid/k8s-sidecar
+  imagePullPolicy: IfNotPresent
+
+persistence:
+  enabled: true
+  storageClassName: gp3
+  size: 10Gi
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.monitoring.svc.cluster.local
+        access: proxy
+        isDefault: true
+
+      - name: Loki
+        type: loki
+        url: http://loki-gateway.monitoring.svc.cluster.local
+        access: proxy

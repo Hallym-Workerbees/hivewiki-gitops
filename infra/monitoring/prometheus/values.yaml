@@ -1,0 +1,37 @@
+configmapReload:
+  prometheus:
+    image:
+      repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus-operator/prometheus-config-reloader
+      tag: v0.91.0
+      pullPolicy: IfNotPresent
+
+server:
+  image:
+    repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/prometheus
+    pullPolicy: IfNotPresent
+  persistentVolume:
+    storageClass: gp3
+
+alertmanager:
+  image:
+    repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/alertmanager
+    pullPolicy: IfNotPresent
+  persistence:
+    storageClass: gp3
+
+kube-state-metrics:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: k8s/kube-state-metrics/kube-state-metrics
+    pullPolicy: IfNotPresent
+
+prometheus-node-exporter:
+  image:
+    registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
+    repository: quay/prometheus/node-exporter
+    pullPolicy: IfNotPresent
+
+prometheus-pushgateway:
+  image:
+    repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/pushgateway
+    pullPolicy: IfNotPresent
