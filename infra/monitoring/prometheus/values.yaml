@@ -35,3 +35,12 @@ prometheus-pushgateway:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/pushgateway
     pullPolicy: IfNotPresent
+
+extraScrapeConfigs:
+  - job_name: yace
+    scrape_interval: 60s
+    scrape_timeout: 30s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - yace-prometheus-yet-another-cloudwatch-exporter.monitoring.svc.cluster.local:80
