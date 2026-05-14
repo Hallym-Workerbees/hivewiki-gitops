@@ -59,9 +59,10 @@ alloy:
             "__meta_kubernetes_pod_uid",
             "__meta_kubernetes_pod_container_name",
           ]
-          separator    = ";"
-          replacement  = "/var/log/pods/$1_$2_$3/$4/*.log"
-          target_label = "__path__"
+          separator     = ";"
+          regex         = "([^;]+);([^;]+);([^;]+);([^;]+)"
+          replacement   = "/var/log/pods/$1_$2_$3/$4/*.log"
+          target_label  = "__path__"
         }
       }
 
