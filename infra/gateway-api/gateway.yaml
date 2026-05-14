@@ -41,3 +41,13 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: argocd
+    - name: grafana
+      protocol: HTTPS
+      port: 443
+      hostname: grafana.hive-wiki.com
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring

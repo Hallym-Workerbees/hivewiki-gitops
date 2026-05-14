@@ -1,0 +1,17 @@
+apiVersion: gateway.k8s.aws/v1beta1
+kind: TargetGroupConfiguration
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  targetReference:
+    group: ""
+    kind: Service
+    name: grafana
+  defaultConfiguration:
+    targetType: ip
+    healthCheckConfig:
+      healthCheckPath: /api/health
+      healthCheckProtocol: http
+      matcher:
+        httpCode: 200-399
