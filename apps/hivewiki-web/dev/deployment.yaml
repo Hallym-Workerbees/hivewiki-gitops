@@ -11,7 +11,6 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 2
-  serviceAccountName: hivewiki-web-dev
   selector:
     matchLabels:
       app: hivewiki-web
@@ -31,6 +30,7 @@ spec:
         app.kubernetes.io/part-of: hivewiki
         environment: dev
     spec:
+      serviceAccountName: hivewiki-web-dev
       restartPolicy: Always
       securityContext:
         runAsNonRoot: true
