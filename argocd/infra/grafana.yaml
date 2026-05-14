@@ -11,6 +11,10 @@ spec:
       targetRevision: main
       ref: values
 
+    - repoURL: https://github.com/Hallym-Workerbees/hivewiki-gitops
+      targetRevision: main
+      path: infra/monitoring/grafana/resources
+
     - repoURL: https://grafana-community.github.io/helm-charts
       chart: grafana
       targetRevision: 12.3.0
