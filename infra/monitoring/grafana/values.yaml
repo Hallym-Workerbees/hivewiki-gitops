@@ -44,3 +44,8 @@ datasources:
         type: loki
         url: http://loki-gateway.monitoring.svc.cluster.local
         access: proxy
+
+admin:
+  existingSecret: grafana-admin
+  userKey: admin-user
+  passwordKey: admin-password
