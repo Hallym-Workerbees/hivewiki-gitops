@@ -8,6 +8,7 @@ resources:
   - listenerruleconfiguration.yaml
   - sealedsecret.yaml
   - service.yaml
+  - serviceaccount.yaml
   - targetgroupconfiguration.yaml
 
 images:
