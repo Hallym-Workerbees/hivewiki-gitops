@@ -10,6 +10,12 @@ configReloader:
     pullPolicy: IfNotPresent
 
 alloy:
+  extraEnv:
+    - name: HOST_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+
   configMap:
     create: true
     content: |
@@ -19,6 +25,12 @@ alloy:
 
       discovery.relabel "pod_logs" {
         targets = discovery.kubernetes.pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_node_name"]
+          regex         = env("HOST_NODE_NAME")
+          action        = "keep"
+        }
 
         rule {
           source_labels = ["__meta_kubernetes_namespace"]
