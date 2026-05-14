@@ -70,37 +70,30 @@ config: |-
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: TargetResponseTime
             statistics: [Average, p95]
             period: 60
             length: 300
-            delay: 120
           - name: HTTPCode_ELB_5XX_Count
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: HTTPCode_Target_5XX_Count
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: HealthyHostCount
             statistics: [Minimum]
             period: 60
             length: 300
-            delay: 120
           - name: UnHealthyHostCount
             statistics: [Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: TargetConnectionErrorCount
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
 
       - type: AWS/RDS
         regions:
@@ -110,42 +103,34 @@ config: |-
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: DatabaseConnections
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: FreeableMemory
             statistics: [Average, Minimum]
             period: 60
             length: 300
-            delay: 120
           - name: FreeStorageSpace
             statistics: [Average, Minimum]
             period: 60
             length: 300
-            delay: 120
           - name: ReadLatency
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: WriteLatency
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: ReadIOPS
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: WriteIOPS
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
 
       - type: AWS/ElastiCache
         regions:
@@ -155,42 +140,34 @@ config: |-
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: EngineCPUUtilization
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: DatabaseMemoryUsagePercentage
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: CurrConnections
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: Evictions
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: CacheHits
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: CacheMisses
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: ReplicationLag
             statistics: [Average, Maximum]
             period: 60
             length: 300
-            delay: 120
 
       - type: AWS/NATGateway
         regions:
@@ -200,32 +177,26 @@ config: |-
             statistics: [Maximum]
             period: 60
             length: 300
-            delay: 120
           - name: BytesInFromDestination
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: BytesOutToDestination
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: PacketsDropCount
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: ErrorPortAllocation
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: IdleTimeoutCount
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
 
       - type: AWS/CloudFront
         regions:
@@ -235,32 +206,26 @@ config: |-
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: BytesDownloaded
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: BytesUploaded
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: TotalErrorRate
             statistics: [Average]
             period: 60
             length: 300
-            delay: 120
           - name: 4xxErrorRate
             statistics: [Average]
             period: 60
             length: 300
-            delay: 120
           - name: 5xxErrorRate
             statistics: [Average]
             period: 60
             length: 300
-            delay: 120
 
       - type: AWS/S3
         regions:
@@ -270,65 +235,32 @@ config: |-
             statistics: [Average]
             period: 86400
             length: 172800
-            delay: 3600
           - name: NumberOfObjects
             statistics: [Average]
             period: 86400
             length: 172800
-            delay: 3600
 
       - type: AWS/WAFV2
         regions:
           - ap-northeast-2
-          - us-east-1
         metrics:
           - name: AllowedRequests
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: BlockedRequests
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: CountedRequests
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: CaptchaRequests
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
           - name: ChallengeRequests
             statistics: [Sum]
             period: 60
             length: 300
-            delay: 120
-
-      - type: AWS/Route53
-        regions:
-          - us-east-1
-        metrics:
-          - name: HealthCheckStatus
-            statistics: [Minimum]
-            period: 60
-            length: 300
-            delay: 120
-          - name: HealthCheckPercentageHealthy
-            statistics: [Average]
-            period: 60
-            length: 300
-            delay: 120
-          - name: ConnectionTime
-            statistics: [Average, Maximum]
-            period: 60
-            length: 300
-            delay: 120
-          - name: TimeToFirstByte
-            statistics: [Average, Maximum]
-            period: 60
-            length: 300
-            delay: 120
