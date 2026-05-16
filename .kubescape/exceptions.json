@@ -1,0 +1,62 @@
+[
+  {
+    "name": "accept-dev-image-signature-pipeline-not-enabled",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "namespace": "hivewiki-web-dev",
+          "name": "hivewiki-web"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "namespace": "hivewiki-collector-dev",
+          "name": "hivewiki-collector"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0237"
+      }
+    ]
+  },
+  {
+    "name": "accept-dev-eks-selinux-context-not-required",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "namespace": "hivewiki-web-dev",
+          "name": "hivewiki-web"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
+          "namespace": "hivewiki-collector-dev",
+          "name": "hivewiki-collector"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "controlID": "C-0211"
+      }
+    ]
+  }
+]

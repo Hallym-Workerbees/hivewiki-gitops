@@ -61,6 +61,7 @@ spec:
               cpu: 500m
               memory: 1Gi
       restartPolicy: Always
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         seccompProfile:

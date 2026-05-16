@@ -15,3 +15,8 @@ jobs:
 
       - name: Run Kubescape
         uses: kubescape/github-action@c9749b84d138c0cbbb702b258774954f5463b82e # v3.0.21
+        with:
+          files: "."
+          severityThreshold: "high"
+          exceptions: ".kubescape/exceptions.json"
+          verbose: true
