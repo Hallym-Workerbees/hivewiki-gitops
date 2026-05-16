@@ -31,6 +31,7 @@ spec:
         environment: dev
     spec:
       serviceAccountName: hivewiki-web-dev
+      automountServiceAccountToken: false
       restartPolicy: Always
       securityContext:
         runAsNonRoot: true
@@ -38,6 +39,8 @@ spec:
         runAsGroup: 10001
         fsGroup: 10001
         fsGroupChangePolicy: Always
+        seLinuxOptions:
+          type: container_t
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -62,6 +65,8 @@ spec:
             runAsNonRoot: true
             runAsUser: 10001
             runAsGroup: 10001
+            seLinuxOptions:
+              type: container_t
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
