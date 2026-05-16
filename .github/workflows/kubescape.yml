@@ -9,9 +9,26 @@ jobs:
   kubescape:
     runs-on: ubuntu-latest
 
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       - name: Run Kubescape
         uses: kubescape/github-action@c9749b84d138c0cbbb702b258774954f5463b82e # v3.0.21
+        with:
+          files: "."
+          format: "sarif"
+          outputFile: "results"
+          severityThreshold: "high"
+          verbose: true
+
+      - name: Upload Kubescape scan results to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@08675ec1765c6f9c1c998cc8326b2d461b4a1e35
+        with:
+          sarif_file: results.sarif
