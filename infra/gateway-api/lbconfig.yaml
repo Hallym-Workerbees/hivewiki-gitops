@@ -12,3 +12,10 @@ spec:
       sslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
   wafV2:
     webACL: arn:aws:wafv2:ap-northeast-2:647502392199:regional/webacl/hivewiki-dev-web-acl/56fc85f7-7040-4ab4-8979-72cbbe8f58fc
+  loadBalancerAttributes:
+    - key: access_logs.s3.enabled
+      value: "true"
+    - key: access_logs.s3.bucket
+      value: hivewiki-dev-alb-gw-logs
+    - key: access_logs.s3.prefix
+      value: ""
