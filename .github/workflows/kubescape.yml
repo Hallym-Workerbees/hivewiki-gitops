@@ -18,4 +18,5 @@ jobs:
         with:
           files: "."
           severityThreshold: "high"
+          exceptions: ".kubescape/exceptions.json"
           verbose: true

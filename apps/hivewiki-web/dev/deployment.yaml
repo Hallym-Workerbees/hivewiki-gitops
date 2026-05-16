@@ -39,8 +39,6 @@ spec:
         runAsGroup: 10001
         fsGroup: 10001
         fsGroupChangePolicy: Always
-        seLinuxOptions:
-          type: container_t
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -65,8 +63,6 @@ spec:
             runAsNonRoot: true
             runAsUser: 10001
             runAsGroup: 10001
-            seLinuxOptions:
-              type: container_t
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
