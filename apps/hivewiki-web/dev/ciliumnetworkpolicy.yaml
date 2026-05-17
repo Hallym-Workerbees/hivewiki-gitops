@@ -1,0 +1,25 @@
+apiVersion: cilium.io/v2
+type: CiliumNetworkPolicy
+metadata:
+  name: hivewiki-web
+  namespace: hivewiki-web-dev
+spec:
+  endpointSelector:
+    matchLabels:
+      app: hivewiki-web
+      app.kubernetes.io/name: hivewiki-web
+      app.kubernetes.io/part-of: hivewiki
+      environment: dev
+  egress:
+    - toFQDNs:
+      - matchName: hivewiki-dev-mdqrku.serverless.apn2.cache.amazonaws.com
+      toPorts:
+      - ports:
+        - port: "6379"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: hivewiki-dev.c7kkg8a0sdsw.ap-northeast-2.rds.amazonaws.com
+      toPorts:
+      - ports:
+        - port: "5432"
+          protocol: TCP
