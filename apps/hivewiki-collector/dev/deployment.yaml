@@ -34,6 +34,10 @@ spec:
         - name: hivewiki-collector
           image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-8f7fd7c
           imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
           envFrom:
             - configMapRef:
                 name: hivewiki-collector-dev-env
@@ -60,6 +64,27 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 24
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
       restartPolicy: Always
       automountServiceAccountToken: false
       securityContext:

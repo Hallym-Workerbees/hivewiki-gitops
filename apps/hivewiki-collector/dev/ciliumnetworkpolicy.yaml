@@ -1,5 +1,5 @@
 apiVersion: cilium.io/v2
-type: CiliumNetworkPolicy
+kind: CiliumNetworkPolicy
 metadata:
   name: hivewiki-collector
   namespace: hivewiki-collector-dev
