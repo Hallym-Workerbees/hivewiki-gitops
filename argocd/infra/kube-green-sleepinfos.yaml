@@ -1,33 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hivewiki-web-dev
+  name: kube-green-sleepinfos
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   project: default
 
   source:
     repoURL: https://github.com/Hallym-Workerbees/hivewiki-gitops
     targetRevision: main
-    path: apps/hivewiki-web/dev
+    path: infra/kube-green/sleepinfos
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: hivewiki-web-dev
-
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      jsonPointers:
-        - /spec/replicas
-    - group: apps
-      kind: StatefulSet
-      jsonPointers:
-        - /spec/replicas
+    namespace: kube-green
 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

@@ -1,0 +1,11 @@
+apiVersion: kube-green.com/v1alpha1
+kind: SleepInfo
+metadata:
+  name: cluster-cost-saving
+  namespace: external-dns
+spec:
+  weekdays: "3-5"
+  sleepAt: "00:30"
+  wakeUpAt: "17:30"
+  timeZone: "Asia/Seoul"
+  suspendCronJobs: true
