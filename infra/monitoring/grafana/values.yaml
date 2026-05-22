@@ -40,6 +40,9 @@ persistence:
   storageClassName: gp3
   size: 10Gi
 
+deploymentStrategy:
+  type: Recreate
+
 datasources:
   datasources.yaml:
     apiVersion: 1
