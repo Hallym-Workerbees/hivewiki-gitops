@@ -9,7 +9,6 @@ Prometheus와 Alertmanager는 `prometheus-community/prometheus` Helm chart로 �
 - Helm values: `infra/monitoring/prometheus/values.yaml`
 - Slack webhook SealedSecret: `infra/monitoring/prometheus/sealedsecret.yaml`
 - Grafana Loki alert rules: `infra/monitoring/grafana/values.yaml`
-- Grafana contact/policy example: `infra/monitoring/grafana/alerting/contact-policy.example.yaml`
 
 ## Alertmanager Integration
 
@@ -57,6 +56,29 @@ Alert rule은 가능한 한 아래 labels를 포함합니다.
 - `env`
 
 현재 `env`는 `dev`로 설정되어 있습니다.
+
+## Environment Strategy
+
+현재 활성 alert rule은 `dev` 환경 기준입니다. 아직 `prod` 워크로드가 없으므로 prod alert rule은 만들지 않습니다.
+대신 모든 alert에 `env` label을 유지해서 나중에 prod가 추가될 때 routing과 grouping을 분리할 수 있게 합니다.
+
+prod 환경을 추가할 때는 아래 항목을 먼저 확인합니다.
+
+- prod namespace 이름
+- HiveWiki web app의 prod Prometheus job 또는 namespace label
+- YACE metric에 AWS `Environment` tag가 어떤 Prometheus label로 들어오는지
+- kube-green 로그에서 `sleepinfo.namespace`로 dev/prod를 안정적으로 구분할 수 있는지
+- dev/prod Slack contact point 또는 Slack channel을 분리할지
+
+운영 정책은 prod를 더 강하게, dev를 더 느슨하게 가져갑니다.
+
+| Environment | Policy |
+| --- | --- |
+| `dev` | 필요한 알림만 활성화하고, notification policy의 `repeat_interval`을 길게 둡니다. |
+| `prod` | 장애성 알림을 활성화하고, critical alert의 반복 주기를 dev보다 짧게 둡니다. |
+
+prod alert를 추가할 때는 기존 dev rule을 단순 복사하지 말고 namespace, job, AWS tag label, Loki log pattern이
+prod 리소스만 바라보는지 확인한 뒤 `env: prod` label을 부여합니다.
 
 ## Alert Rules
 
@@ -114,12 +136,10 @@ sum(count_over_time({namespace="kube-green"} |= "controllers.SleepInfo" |= "last
 좁혀 sleep/wake 실행과 직접 관련된 로그만 감지합니다. rule group interval은 `1m`, `noDataState`는 `OK`,
 `execErrState`는 `Error`입니다.
 
-Slack contact point와 notification policy는 별도로 구성합니다. 예시는
-`infra/monitoring/grafana/alerting/contact-policy.example.yaml`에 있으며, 실제 적용 시에는 placeholder receiver를
-실제 Slack contact point 이름과 uid로 바꿔야 합니다. Slack webhook URL은 provisioning 파일에 평문으로 넣지 않고
-Prometheus Alertmanager에서도 사용하는 `alertmanager-slack-webhook` Secret을 Grafana pod 환경변수로 주입한 뒤
-`$GRAFANA_ALERTING_SLACK_WEBHOOK_URL`로 참조합니다. Grafana alerting file provisioning은 환경변수 치환을
-지원합니다.
+Slack contact point와 notification policy는 별도로 구성합니다. Slack webhook URL은 provisioning 파일에
+평문으로 넣지 않고 Prometheus Alertmanager에서도 사용하는 `alertmanager-slack-webhook` Secret을 Grafana pod
+환경변수로 주입한 뒤 `$GRAFANA_ALERTING_SLACK_WEBHOOK_URL`로 참조합니다. Grafana alerting file provisioning은
+환경변수 치환을 지원합니다.
 
 Grafana values:
 
@@ -134,7 +154,14 @@ envValueFrom:
 `alertmanager-slack-webhook` Secret은 `infra/monitoring/prometheus/sealedsecret.yaml`의 SealedSecret으로
 관리합니다. Grafana와 Alertmanager가 같은 `monitoring` namespace에 있으므로 같은 Secret을 재사용할 수 있습니다.
 중복 알림을 줄이기 위해 예시 policy는 `alertname`, `service`, `env`, `severity`로 group하고
-`repeat_interval`을 `12h`로 둡니다.
+dev route의 `repeat_interval`은 `12h`, prod route placeholder의 `repeat_interval`은 `4h`로 둡니다.
+
+contact point URL 예시:
+
+```yaml
+settings:
+  url: $GRAFANA_ALERTING_SLACK_WEBHOOK_URL
+```
 
 Grafana file provisioning은 Grafana 시작 시 읽히며, 변경 사항은 Grafana 재시작 또는 Admin API hot reload가
 필요합니다. ArgoCD로 Helm values 변경이 반영되면 Grafana pod가 새 provisioning 파일을 읽도록 rollout restart를
