@@ -31,36 +31,12 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 44,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "<div style=\"display: flex; align-items: center;\">\n    <img src=\"https://assets-global.website-files.com/634ebd5aab79d1fa815c5394/63515bd23885ea7dc0501db7_PerfectScale-Emblem.svg\" alt=\"PerfectScale Logo\" width=\"100\" height=\"100\">\n    <div style=\"margin-left: 20px;\">\n        <h4>Cut your Kubernetes costs by 50% and improve performance with <a href=\"https://www.perfectscale.io/demo\">PerfectScale</a></h4>\n        <h4><a href=\"https://www.perfectscale.io/blog/karpenter-monitoring-with-prometheus\">How to monitor Karpenter with Prometheus</a></h4>\n    </div>\n</div>\n",
-        "mode": "html"
-      },
-      "pluginVersion": "10.1.5",
-      "type": "text"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 3
+        "y": 0
       },
       "id": 17,
       "panels": [],
@@ -96,7 +72,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 4
+        "y": 1
       },
       "id": 7,
       "options": {
@@ -159,7 +135,7 @@
         "h": 5,
         "w": 4,
         "x": 4,
-        "y": 4
+        "y": 1
       },
       "id": 6,
       "options": {
@@ -218,7 +194,7 @@
         "h": 5,
         "w": 4,
         "x": 8,
-        "y": 4
+        "y": 1
       },
       "id": 10,
       "options": {
@@ -283,7 +259,7 @@
         "h": 5,
         "w": 4,
         "x": 12,
-        "y": 4
+        "y": 1
       },
       "id": 39,
       "options": {
@@ -348,7 +324,7 @@
         "h": 5,
         "w": 4,
         "x": 16,
-        "y": 4
+        "y": 1
       },
       "id": 11,
       "options": {
@@ -413,7 +389,7 @@
         "h": 5,
         "w": 4,
         "x": 20,
-        "y": 4
+        "y": 1
       },
       "id": 40,
       "options": {
@@ -484,7 +460,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 9
+        "y": 6
       },
       "id": 31,
       "options": {
@@ -553,7 +529,7 @@
         "h": 5,
         "w": 4,
         "x": 4,
-        "y": 9
+        "y": 6
       },
       "id": 30,
       "options": {
@@ -614,7 +590,7 @@
         "h": 5,
         "w": 4,
         "x": 8,
-        "y": 9
+        "y": 6
       },
       "id": 13,
       "options": {
@@ -676,7 +652,7 @@
         "h": 5,
         "w": 4,
         "x": 12,
-        "y": 9
+        "y": 6
       },
       "id": 41,
       "options": {
@@ -737,7 +713,7 @@
         "h": 5,
         "w": 8,
         "x": 16,
-        "y": 9
+        "y": 6
       },
       "id": 38,
       "options": {
@@ -777,7 +753,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 11
       },
       "id": 35,
       "panels": [],
@@ -857,7 +833,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 15
+        "y": 12
       },
       "id": 42,
       "options": {
@@ -984,7 +960,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 15
+        "y": 12
       },
       "id": 36,
       "options": {
@@ -1123,7 +1099,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 15
+        "y": 12
       },
       "id": 33,
       "options": {
@@ -1262,7 +1238,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 15
+        "y": 12
       },
       "id": 43,
       "options": {
@@ -1300,7 +1276,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 19
       },
       "id": 15,
       "panels": [],
@@ -1419,7 +1395,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 20
       },
       "id": 4,
       "options": {
@@ -1811,7 +1787,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 30
       },
       "id": 29,
       "options": {
@@ -1919,7 +1895,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 30
       },
       "id": 5,
       "options": {
@@ -2015,7 +1991,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 38
       },
       "id": 3,
       "options": {
@@ -2111,7 +2087,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 38
       },
       "id": 2,
       "options": {
@@ -2205,7 +2181,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 49
+        "y": 46
       },
       "id": 25,
       "options": {
@@ -2300,7 +2276,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 49
+        "y": 46
       },
       "id": 27,
       "options": {
@@ -2338,7 +2314,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 54
       },
       "id": 19,
       "panels": [],
@@ -2409,7 +2385,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 58
+        "y": 55
       },
       "id": 21,
       "options": {
@@ -2504,7 +2480,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 58
+        "y": 55
       },
       "id": 9,
       "options": {
@@ -2599,7 +2575,7 @@
         "h": 5,
         "w": 24,
         "x": 0,
-        "y": 66
+        "y": 63
       },
       "id": 37,
       "options": {
@@ -2635,7 +2611,11 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "karpenter",
+    "kubernetes",
+    "prometheus"
+  ],
   "templating": {
     "list": [
       {
