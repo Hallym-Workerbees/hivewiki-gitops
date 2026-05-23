@@ -76,13 +76,13 @@ Alert rule은 가능한 한 아래 labels를 포함합니다.
 | `WebAppHigh5xxRate` | warning | `hivewiki-web` | `5m` | HiveWiki 5xx response rate is over `1%`, and response rate is over `1 rps` |
 | `WebAppHighLatencyP95` | warning | `hivewiki-web` | `5m` | `histogram_quantile(0.95, rate(hivewiki_http_request_duration_seconds_bucket[5m])) > 0.5` |
 
-## Excluded Alerts
+## 제외한 알림
 
-`kube-green` alerts are intentionally excluded from Prometheus rules. kube-green does not currently expose the
-needed metrics, so it should be handled separately with Loki log-based alerts.
+`kube-green` 알림은 Prometheus rule에서 제외합니다. 현재 kube-green은 필요한 metric을 노출하지 않으므로
+Loki 로그 기반 alert로 별도 처리합니다.
 
-`KarpenterUnschedulablePods` is not defined. The available Karpenter metrics do not include a direct unschedulable
-pod count metric such as `karpenter_scheduler_unschedulable_pods_count`.
+`KarpenterUnschedulablePods`는 정의하지 않습니다. 현재 사용 가능한 Karpenter metric에는
+`karpenter_scheduler_unschedulable_pods_count`처럼 unschedulable pod 수를 직접 나타내는 metric이 없습니다.
 
-`RDSFreeStorageLow` is not defined. Current RDS metrics include free storage bytes, but not total or allocated storage,
-so a safe free-space percentage cannot be calculated from Prometheus metrics alone.
+`RDSFreeStorageLow`는 정의하지 않습니다. 현재 RDS metric에는 남은 스토리지 용량만 있고 전체 또는 할당
+스토리지 용량이 없어 Prometheus metric만으로 안전한 잔여 비율을 계산할 수 없습니다.
