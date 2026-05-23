@@ -72,6 +72,9 @@ gateway:
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
+  nodeSelector:
+    env: shared
+    workload: system
 
 lokiCanary:
   enabled: true

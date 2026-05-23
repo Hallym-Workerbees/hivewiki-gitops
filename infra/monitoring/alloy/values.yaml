@@ -85,5 +85,10 @@ alloy:
     varlog: true
     dockercontainers: true
 
+controller:
+  nodeSelector:
+    env: shared
+    workload: system
+
 serviceMonitor:
   enabled: false

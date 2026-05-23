@@ -30,6 +30,15 @@ spec:
         app.kubernetes.io/part-of: hivewiki
         environment: dev
     spec:
+      nodeSelector:
+        env: dev
+        workload: app
+        nodepool: dev
+      tolerations:
+        - key: env
+          operator: Equal
+          value: dev
+          effect: NoSchedule
       containers:
         - name: hivewiki-collector
           image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:dev-8f7fd7c

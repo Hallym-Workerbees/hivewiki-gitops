@@ -29,3 +29,7 @@ metrics:
 serviceAccount:
   create: true
   name: argocd-image-updater
+
+nodeSelector:
+  env: shared
+  workload: system
