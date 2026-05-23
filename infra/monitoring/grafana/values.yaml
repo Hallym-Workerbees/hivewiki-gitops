@@ -64,6 +64,157 @@ datasources:
         url: http://loki-gateway.monitoring.svc.cluster.local
         access: proxy
 
+envValueFrom:
+  GRAFANA_ALERTING_SLACK_WEBHOOK_URL:
+    secretKeyRef:
+      name: alertmanager-slack-webhook
+      key: webhook-url
+
+alerting:
+  kube-green-rules.yaml:
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: kube-green-loki-events
+        folder: Monitoring
+        interval: 1m
+        rules:
+          - uid: kube-green-wake-up
+            title: KubeGreenWakeUp
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: loki
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                model:
+                  datasource:
+                    type: loki
+                    uid: loki
+                  editorMode: code
+                  expr: sum(count_over_time({namespace="kube-green"} |= "controllers.SleepInfo" |= "last schedule value" |= "\"operation\":\"WAKE_UP\"" [5m]))
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  queryType: range
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                model:
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                model:
+                  conditions:
+                    - evaluator:
+                        params:
+                          - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - C
+                      reducer:
+                        type: last
+                      type: query
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: B
+                  refId: C
+                  type: threshold
+            noDataState: OK
+            execErrState: Error
+            for: 0m
+            annotations:
+              summary: kube-green wake-up event detected
+              description: kube-green emitted a WAKE_UP event in the last 5 minutes.
+            labels:
+              severity: info
+              service: kube-green
+              env: dev
+
+          - uid: kube-green-sleep
+            title: KubeGreenSleep
+            condition: C
+            data:
+              - refId: A
+                datasourceUid: loki
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                model:
+                  datasource:
+                    type: loki
+                    uid: loki
+                  editorMode: code
+                  expr: sum(count_over_time({namespace="kube-green"} |= "controllers.SleepInfo" |= "last schedule value" |= "\"operation\":\"SLEEP\"" [5m]))
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+                  queryType: range
+                  refId: A
+              - refId: B
+                datasourceUid: __expr__
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                model:
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: A
+                  reducer: last
+                  refId: B
+                  type: reduce
+              - refId: C
+                datasourceUid: __expr__
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                model:
+                  conditions:
+                    - evaluator:
+                        params:
+                          - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                          - C
+                      reducer:
+                        type: last
+                      type: query
+                  datasource:
+                    type: __expr__
+                    uid: __expr__
+                  expression: B
+                  refId: C
+                  type: threshold
+            noDataState: OK
+            execErrState: Error
+            for: 0m
+            annotations:
+              summary: kube-green sleep event detected
+              description: kube-green emitted a SLEEP event in the last 5 minutes.
+            labels:
+              severity: info
+              service: kube-green
+              env: dev
+
 admin:
   existingSecret: grafana-admin
   userKey: admin-user
