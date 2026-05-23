@@ -4411,7 +4411,11 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": [],
+  "tags": [
+    "yace",
+    "aws",
+    "cloudwatch"
+  ],
   "templating": {
     "list": []
   },

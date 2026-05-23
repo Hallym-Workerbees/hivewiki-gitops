@@ -198,7 +198,11 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": [],
+  "tags": [
+    "kubernetes",
+    "loki",
+    "logs"
+  ],
   "templating": {
     "list": [
       {
