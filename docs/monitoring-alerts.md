@@ -8,6 +8,8 @@ Prometheus와 Alertmanager는 `prometheus-community/prometheus` Helm chart로 �
 - ArgoCD Application: `argocd/infra/prometheus.yaml`
 - Helm values: `infra/monitoring/prometheus/values.yaml`
 - Slack webhook SealedSecret: `infra/monitoring/prometheus/sealedsecret.yaml`
+- Grafana Loki alert rules: `infra/monitoring/grafana/values.yaml`
+- Grafana contact/policy example: `infra/monitoring/grafana/alerting/contact-policy.example.yaml`
 
 ## Alertmanager Integration
 
@@ -86,3 +88,64 @@ Loki 로그 기반 alert로 별도 처리합니다.
 
 `RDSFreeStorageLow`는 정의하지 않습니다. 현재 RDS metric에는 남은 스토리지 용량만 있고 전체 또는 할당
 스토리지 용량이 없어 Prometheus metric만으로 안전한 잔여 비율을 계산할 수 없습니다.
+
+## Grafana Loki 알림
+
+kube-green은 Prometheus metric을 노출하지 않으므로 sleep/wake 이벤트는 Loki 로그 기반 Grafana Alerting으로
+감지합니다. Grafana alert rule provisioning은 Grafana Helm chart의 `alerting` values로 관리합니다.
+이 값은 chart에 의해 Grafana의 alerting provisioning 디렉토리인 `/etc/grafana/provisioning/alerting`에
+반영됩니다.
+
+현재 Loki datasource uid는 `loki`를 사용합니다.
+
+| Alert | Severity | Service | Duration | Condition |
+| --- | --- | --- | --- | --- |
+| `KubeGreenWakeUp` | info | `kube-green` | `0m` | `controllers.SleepInfo`, `last schedule value`, `"operation":"WAKE_UP"` 로그가 최근 `5m` 안에 1건 이상 |
+| `KubeGreenSleep` | info | `kube-green` | `0m` | `controllers.SleepInfo`, `last schedule value`, `"operation":"SLEEP"` 로그가 최근 `5m` 안에 1건 이상 |
+
+사용하는 LogQL 패턴:
+
+```logql
+sum(count_over_time({namespace="kube-green"} |= "controllers.SleepInfo" |= "last schedule value" |= "\"operation\":\"WAKE_UP\"" [5m]))
+sum(count_over_time({namespace="kube-green"} |= "controllers.SleepInfo" |= "last schedule value" |= "\"operation\":\"SLEEP\"" [5m]))
+```
+
+로그 검색 범위를 `namespace="kube-green"`, `controllers.SleepInfo`, `last schedule value`, operation 값으로
+좁혀 sleep/wake 실행과 직접 관련된 로그만 감지합니다. rule group interval은 `1m`, `noDataState`는 `OK`,
+`execErrState`는 `Error`입니다.
+
+Slack contact point와 notification policy는 별도로 구성합니다. 예시는
+`infra/monitoring/grafana/alerting/contact-policy.example.yaml`에 있으며, 실제 적용 시에는 placeholder receiver를
+실제 Slack contact point 이름과 uid로 바꿔야 합니다. Slack webhook URL은 provisioning 파일에 평문으로 넣지 않고
+Prometheus Alertmanager에서도 사용하는 `alertmanager-slack-webhook` Secret을 Grafana pod 환경변수로 주입한 뒤
+`$GRAFANA_ALERTING_SLACK_WEBHOOK_URL`로 참조합니다. Grafana alerting file provisioning은 환경변수 치환을
+지원합니다.
+
+Grafana values:
+
+```yaml
+envValueFrom:
+  GRAFANA_ALERTING_SLACK_WEBHOOK_URL:
+    secretKeyRef:
+      name: alertmanager-slack-webhook
+      key: webhook-url
+```
+
+`alertmanager-slack-webhook` Secret은 `infra/monitoring/prometheus/sealedsecret.yaml`의 SealedSecret으로
+관리합니다. Grafana와 Alertmanager가 같은 `monitoring` namespace에 있으므로 같은 Secret을 재사용할 수 있습니다.
+중복 알림을 줄이기 위해 예시 policy는 `alertname`, `service`, `env`, `severity`로 group하고
+`repeat_interval`을 `12h`로 둡니다.
+
+Grafana file provisioning은 Grafana 시작 시 읽히며, 변경 사항은 Grafana 재시작 또는 Admin API hot reload가
+필요합니다. ArgoCD로 Helm values 변경이 반영되면 Grafana pod가 새 provisioning 파일을 읽도록 rollout restart를
+수행하는 방식이 가장 단순합니다.
+
+적용 예시:
+
+```bash
+argocd app sync grafana
+kubectl -n monitoring rollout restart deployment/grafana
+```
+
+Admin API로 provisioning을 hot reload할 수도 있지만, 운영에서는 ArgoCD sync 후 Grafana pod 재시작으로
+파일 provisioning을 다시 읽히는 방식을 기본으로 사용합니다.
