@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hivewiki-web-env
+data:
+  DJANGO_ALLOWED_HOSTS: "www.hive-wiki.com,hivewiki-web.hivewiki-web-prod.svc.cluster.local"
+  DJANGO_CSRF_TRUSTED_ORIGINS: "https://www.hive-wiki.com"

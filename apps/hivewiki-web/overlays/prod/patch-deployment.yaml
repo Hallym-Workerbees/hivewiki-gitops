@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hivewiki-web
+  labels:
+    environment: prod
+spec:
+  selector:
+    matchLabels:
+      environment: prod
+  template:
+    metadata:
+      labels:
+        environment: prod
+    spec:
+      nodeSelector:
+        env: prod
+        workload: app
+        nodepool: prod
+      tolerations:
+        - key: env
+          operator: Equal
+          value: prod
+          effect: NoSchedule
+      containers:
+        - name: hivewiki-web
+          startupProbe:
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: www.hive-wiki.com
+                - name: X-Forwarded-Proto
+                  value: https
+          livenessProbe:
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: www.hive-wiki.com
+                - name: X-Forwarded-Proto
+                  value: https
+          readinessProbe:
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: www.hive-wiki.com
+                - name: X-Forwarded-Proto
+                  value: https

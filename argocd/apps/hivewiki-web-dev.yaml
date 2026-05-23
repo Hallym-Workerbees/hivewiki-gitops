@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/Hallym-Workerbees/hivewiki-gitops
     targetRevision: main
-    path: apps/hivewiki-web/dev
+    path: apps/hivewiki-web/overlays/dev
 
   destination:
     server: https://kubernetes.default.svc

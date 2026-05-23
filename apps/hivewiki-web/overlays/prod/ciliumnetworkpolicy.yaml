@@ -1,0 +1,36 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hivewiki-web
+  namespace: hivewiki-web-prod
+spec:
+  endpointSelector:
+    matchLabels:
+      app: hivewiki-web
+      app.kubernetes.io/name: hivewiki-web
+      app.kubernetes.io/part-of: hivewiki
+      environment: prod
+  egress:
+    - toFQDNs:
+      - matchName: ""
+      toPorts:
+      - ports:
+        - port: "6379"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: ""
+      toPorts:
+      - ports:
+        - port: "5432"
+          protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": kube-system
+            "k8s:k8s-app": kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"

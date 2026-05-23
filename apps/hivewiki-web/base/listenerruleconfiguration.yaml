@@ -2,7 +2,6 @@ apiVersion: gateway.k8s.aws/v1beta1
 kind: ListenerRuleConfiguration
 metadata:
   name: deny-metrics
-  namespace: hivewiki-web-dev
 spec:
   actions:
     - type: "fixed-response"
