@@ -9,6 +9,10 @@ server:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/prometheus
     pullPolicy: IfNotPresent
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - prometheus-alertmanager.monitoring.svc.cluster.local:9093
   persistentVolume:
     storageClass: gp3
   nodeSelector:
@@ -19,6 +23,46 @@ alertmanager:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/alertmanager
     pullPolicy: IfNotPresent
+  extraSecretMounts:
+    - name: alertmanager-slack-webhook
+      mountPath: /etc/alertmanager/secrets/slack
+      secretName: alertmanager-slack-webhook
+      readOnly: true
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      receiver: slack
+      group_by: ["alertname", "service", "env", "severity"]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      routes:
+        - receiver: slack
+          matchers:
+            - severity="critical"
+          repeat_interval: 1h
+    inhibit_rules:
+      - source_matchers:
+          - severity="critical"
+        target_matchers:
+          - severity=~"warning|info"
+        equal: ["service", "env"]
+    receivers:
+      - name: slack
+        slack_configs:
+          - api_url_file: /etc/alertmanager/secrets/slack/webhook-url
+            send_resolved: true
+            title: '[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}'
+            text: |-
+              {{ range .Alerts -}}
+              *Alert:* {{ .Labels.alertname }}
+              *Severity:* {{ .Labels.severity }}
+              *Service:* {{ .Labels.service }}
+              *Env:* {{ .Labels.env }}
+              *Summary:* {{ .Annotations.summary }}
+              *Description:* {{ .Annotations.description }}
+              {{ end }}
   persistence:
     storageClass: gp3
 
@@ -38,6 +82,209 @@ prometheus-pushgateway:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/pushgateway
     pullPolicy: IfNotPresent
+
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: argocd.rules
+        rules:
+          - alert: ArgoCDAppUnhealthy
+            expr: argocd_app_health_status{health_status!="Healthy"} == 1
+            for: 5m
+            labels:
+              severity: warning
+              service: argocd
+              env: dev
+            annotations:
+              summary: ArgoCD application is unhealthy
+              description: ArgoCD application {{ $labels.name }} has been in {{ $labels.health_status }} state for more than 5 minutes.
+
+          - alert: ArgoCDAppOutOfSync
+            expr: argocd_app_sync_status{sync_status!="Synced"} == 1
+            for: 10m
+            labels:
+              severity: warning
+              service: argocd
+              env: dev
+            annotations:
+              summary: ArgoCD application is out of sync
+              description: ArgoCD application {{ $labels.name }} has been in {{ $labels.sync_status }} state for more than 10 minutes.
+
+      - name: kubernetes.rules
+        rules:
+          - alert: PodCrashLooping
+            expr: kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff"} > 0
+            for: 5m
+            labels:
+              severity: warning
+              service: kubernetes
+              env: dev
+            annotations:
+              summary: Pod container is crash looping
+              description: Pod {{ $labels.namespace }}/{{ $labels.pod }} container {{ $labels.container }} has been in CrashLoopBackOff for more than 5 minutes.
+
+          - alert: PodOOMKilled
+            expr: kube_pod_container_status_last_terminated_reason{reason="OOMKilled"} > 0
+            for: 5m
+            labels:
+              severity: warning
+              service: kubernetes
+              env: dev
+            annotations:
+              summary: Pod container was OOMKilled
+              description: Pod {{ $labels.namespace }}/{{ $labels.pod }} container {{ $labels.container }} was OOMKilled and has remained reported for more than 5 minutes.
+
+          - alert: PrometheusTargetDown
+            expr: up == 0
+            for: 5m
+            labels:
+              severity: critical
+              service: monitoring
+              env: dev
+            annotations:
+              summary: Prometheus scrape target is down
+              description: Prometheus target {{ $labels.job }}/{{ $labels.instance }} has been down for more than 5 minutes.
+
+          - alert: NodeNotReady
+            expr: kube_node_status_condition{condition="Ready", status="true"} == 0
+            for: 5m
+            labels:
+              severity: critical
+              service: kubernetes
+              env: dev
+            annotations:
+              summary: Kubernetes node is not ready
+              description: Node {{ $labels.node }} has been NotReady for more than 5 minutes.
+
+          - alert: PersistentVolumeUsageHigh
+            expr: kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes >= 0.85
+            for: 10m
+            labels:
+              severity: warning
+              service: kubernetes
+              env: dev
+            annotations:
+              summary: Persistent volume usage is high
+              description: PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} has used at least 85% of its capacity for more than 10 minutes.
+
+      - name: aws.rules
+        rules:
+          - alert: ALB5xxHigh
+            expr: |
+              sum by (dimension_LoadBalancer, dimension_TargetGroup, dimension_Name) (
+                {__name__=~"aws_applicationelb_httpcode_(elb|target)_5_xx_count_sum"}
+              )
+              /
+              clamp_min(
+                sum by (dimension_LoadBalancer, dimension_TargetGroup, dimension_Name) (
+                  aws_applicationelb_request_count_sum
+                ),
+                1
+              ) > 0.01
+              and
+              sum by (dimension_LoadBalancer, dimension_TargetGroup, dimension_Name) (
+                aws_applicationelb_request_count_sum
+              ) > 100
+            for: 5m
+            labels:
+              severity: warning
+              service: alb
+              env: dev
+            annotations:
+              summary: ALB 5xx error rate is high
+              description: ALB {{ $labels.dimension_Name }} has a 5xx error rate above 1% with more than 100 requests per CloudWatch period for more than 5 minutes.
+
+          - alert: ALBTargetResponseTimeP95High
+            expr: aws_applicationelb_target_response_time_p95 > 0.5
+            for: 5m
+            labels:
+              severity: warning
+              service: alb
+              env: dev
+            annotations:
+              summary: ALB target p95 response time is high
+              description: ALB {{ $labels.dimension_Name }} target p95 response time has been above 0.5 seconds for more than 5 minutes.
+
+          - alert: RDSCPUHigh
+            expr: aws_rds_cpuutilization_average > 80
+            for: 10m
+            labels:
+              severity: warning
+              service: rds
+              env: dev
+            annotations:
+              summary: RDS CPU utilization is high
+              description: RDS {{ $labels.dimension_DBInstanceIdentifier }} CPU utilization has been above 80% for more than 10 minutes.
+
+          - alert: RDSReadLatencyHigh
+            expr: aws_rds_read_latency_average > 0.05
+            for: 10m
+            labels:
+              severity: warning
+              service: rds
+              env: dev
+            annotations:
+              summary: RDS read latency is high
+              description: RDS {{ $labels.dimension_DBInstanceIdentifier }} read latency has been above 0.05 seconds for more than 10 minutes.
+
+          - alert: RDSWriteLatencyHigh
+            expr: aws_rds_write_latency_average > 0.05
+            for: 10m
+            labels:
+              severity: warning
+              service: rds
+              env: dev
+            annotations:
+              summary: RDS write latency is high
+              description: RDS {{ $labels.dimension_DBInstanceIdentifier }} write latency has been above 0.05 seconds for more than 10 minutes.
+
+      - name: hivewiki-web.rules
+        rules:
+          - alert: WebAppDown
+            expr: hivewiki_up{job="hivewiki-web"} == 0
+            for: 3m
+            labels:
+              severity: critical
+              service: hivewiki-web
+              env: dev
+            annotations:
+              summary: HiveWiki web app is down
+              description: HiveWiki web app instance {{ $labels.instance }} has reported down for more than 3 minutes.
+
+          - alert: WebAppHigh5xxRate
+            expr: |
+              (
+                sum(rate(hivewiki_http_responses_total{job="hivewiki-web", status_code=~"5.."}[5m]))
+                /
+                clamp_min(sum(rate(hivewiki_http_responses_total{job="hivewiki-web"}[5m])), 1)
+              ) > 0.01
+              and
+              sum(rate(hivewiki_http_responses_total{job="hivewiki-web"}[5m])) > 1
+            for: 5m
+            labels:
+              severity: warning
+              service: hivewiki-web
+              env: dev
+            annotations:
+              summary: HiveWiki web app 5xx rate is high
+              description: HiveWiki web app 5xx error rate has been above 1% with more than 1 response per second for more than 5 minutes.
+
+          - alert: WebAppHighLatencyP95
+            expr: |
+              histogram_quantile(
+                0.95,
+                sum by (le) (
+                  rate(hivewiki_http_request_duration_seconds_bucket{job="hivewiki-web"}[5m])
+                )
+              ) > 0.5
+            for: 5m
+            labels:
+              severity: warning
+              service: hivewiki-web
+              env: dev
+            annotations:
+              summary: HiveWiki web app p95 latency is high
+              description: HiveWiki web app p95 latency has been above 500ms for more than 5 minutes.
 
 extraScrapeConfigs: |
   - job_name: yace
