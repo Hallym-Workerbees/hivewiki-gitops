@@ -63,3 +63,32 @@ extraScrapeConfigs: |
           - argocd-application-controller-metrics.argocd.svc.cluster.local:8082
           - argocd-repo-server-metrics.argocd.svc.cluster.local:8084
           - argocd-server-metrics.argocd.svc.cluster.local:8083
+  - job_name: hivewiki-web
+    metrics_path: /metrics/
+    scrape_interval: 15s
+    scrape_timeout: 5s
+
+    kubernetes_sd_configs:
+      - role: endpoints
+
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace]
+        regex: hivewiki-web-dev
+        action: keep
+
+      - source_labels: [__meta_kubernetes_service_name]
+        regex: hivewiki-web
+        action: keep
+
+      - source_labels: [__meta_kubernetes_endpoint_port_name]
+        regex: .*
+        action: keep
+
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+
+      - source_labels: [__meta_kubernetes_service_name]
+        target_label: service
