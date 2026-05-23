@@ -11,6 +11,9 @@ server:
     pullPolicy: IfNotPresent
   persistentVolume:
     storageClass: gp3
+  nodeSelector:
+    env: shared
+    workload: system
 
 alertmanager:
   image:
