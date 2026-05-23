@@ -45,3 +45,14 @@ spec:
                   value: www.hive-wiki.com
                 - name: X-Forwarded-Proto
                   value: https
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
