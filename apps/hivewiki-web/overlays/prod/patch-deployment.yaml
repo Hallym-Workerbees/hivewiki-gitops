@@ -13,6 +13,14 @@ spec:
       labels:
         environment: prod
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: Always
+        seccompProfile:
+          type: RuntimeDefault
       nodeSelector:
         env: prod
         workload: app
