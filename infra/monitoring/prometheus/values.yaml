@@ -286,6 +286,85 @@ serverFiles:
               summary: HiveWiki web app p95 latency is high
               description: HiveWiki web app p95 latency has been above 500ms for more than 5 minutes.
 
+      - name: hivewiki-collector.rules
+        rules:
+          - alert: CollectorScrapeDown
+            expr: up{job="hivewiki-collector"} == 0
+            for: 3m
+            labels:
+              severity: critical
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector scrape target is down
+              description: HiveWiki collector target {{ $labels.instance }} has been down for more than 3 minutes.
+
+          - alert: CollectorNoRecentSuccess
+            expr: time() - collector_last_success_timestamp{job="hivewiki-collector"} > 1800
+            for: 5m
+            labels:
+              severity: warning
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector has no recent successful run
+              description: HiveWiki collector instance {{ $labels.instance }} has not reported a successful run in the last 30 minutes.
+
+          - alert: CollectorConsecutiveFailures
+            expr: collector_consecutive_failures{job="hivewiki-collector"} >= 3
+            for: 5m
+            labels:
+              severity: critical
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector is failing consecutively
+              description: HiveWiki collector instance {{ $labels.instance }} has reported at least 3 consecutive failures for more than 5 minutes.
+
+          - alert: CollectorDispatchFailures
+            expr: increase(collector_dispatch_failed_total{job="hivewiki-collector"}[10m]) > 0
+            for: 5m
+            labels:
+              severity: warning
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector dispatch failures detected
+              description: HiveWiki collector instance {{ $labels.instance }} has dispatch failures in the last 10 minutes.
+
+          - alert: CollectorLoopErrors
+            expr: increase(collector_loop_errors_total{job="hivewiki-collector"}[10m]) > 0
+            for: 5m
+            labels:
+              severity: warning
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector loop errors detected
+              description: HiveWiki collector instance {{ $labels.instance }} has loop errors in the last 10 minutes.
+
+          - alert: CollectorPendingDocumentsHigh
+            expr: collector_pending_documents{job="hivewiki-collector"} > 100
+            for: 15m
+            labels:
+              severity: warning
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector pending document backlog is high
+              description: HiveWiki collector instance {{ $labels.instance }} has more than 100 pending documents for more than 15 minutes.
+
+          - alert: CollectorDeadDocumentsPresent
+            expr: collector_dead_documents{job="hivewiki-collector"} > 0
+            for: 10m
+            labels:
+              severity: warning
+              service: hivewiki-collector
+              env: dev
+            annotations:
+              summary: HiveWiki collector dead documents are present
+              description: HiveWiki collector instance {{ $labels.instance }} has dead documents for more than 10 minutes.
+
 extraScrapeConfigs: |
   - job_name: yace
     scrape_interval: 15s
@@ -310,6 +389,47 @@ extraScrapeConfigs: |
           - argocd-application-controller-metrics.argocd.svc.cluster.local:8082
           - argocd-repo-server-metrics.argocd.svc.cluster.local:8084
           - argocd-server-metrics.argocd.svc.cluster.local:8083
+  - job_name: hivewiki-collector
+    scrape_interval: 15s
+    scrape_timeout: 5s
+
+    kubernetes_sd_configs:
+      - role: endpoints
+
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+        regex: "true"
+        action: keep
+
+      - source_labels: [__meta_kubernetes_namespace]
+        regex: hivewiki-collector-dev
+        action: keep
+
+      - source_labels: [__meta_kubernetes_service_name]
+        regex: hivewiki-collector
+        action: keep
+
+      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+        regex: (.+)
+        target_label: __metrics_path__
+
+      - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+
+      - source_labels: [__meta_kubernetes_service_name]
+        target_label: service
+
+      - source_labels: [__meta_kubernetes_service_label_environment]
+        target_label: env
+
   - job_name: hivewiki-web
     metrics_path: /metrics/
     scrape_interval: 15s

@@ -24,6 +24,9 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: hivewiki-collector
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
       labels:
         app: hivewiki-collector
         app.kubernetes.io/name: hivewiki-collector
