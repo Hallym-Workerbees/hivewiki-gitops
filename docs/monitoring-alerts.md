@@ -7,7 +7,7 @@ Prometheus와 Alertmanager는 `prometheus-community/prometheus` Helm chart로 �
 
 - ArgoCD Application: `argocd/infra/prometheus.yaml`
 - Helm values: `infra/monitoring/prometheus/values.yaml`
-- Slack webhook SealedSecret: `infra/monitoring/prometheus/sealedsecret.yaml`
+- Slack webhook SealedSecret: `infra/monitoring/secrets/resources/sealedsecret.yaml`
 - Grafana Loki alert rules: `infra/monitoring/grafana/values.yaml`
 - Grafana dashboards: `infra/monitoring/grafana/dashboards/`
 
@@ -187,7 +187,7 @@ envValueFrom:
       key: webhook-url
 ```
 
-`alertmanager-slack-webhook` Secret은 `infra/monitoring/prometheus/sealedsecret.yaml`의 SealedSecret으로
+`alertmanager-slack-webhook` Secret은 `infra/monitoring/secrets/resources/sealedsecret.yaml`의 SealedSecret으로
 관리합니다. Grafana와 Alertmanager가 같은 `monitoring` namespace에 있으므로 같은 Secret을 재사용할 수 있습니다.
 중복 알림을 줄이기 위해 예시 policy는 `alertname`, `service`, `env`, `severity`로 group하고
 dev route의 `repeat_interval`은 `12h`, prod route placeholder의 `repeat_interval`은 `4h`로 둡니다.

@@ -44,7 +44,7 @@ SealedSecret 파일명은 각 컴포넌트 디렉토리에서 `sealedsecret.yaml
 
 - `apps/hivewiki-web/dev/sealedsecret.yaml`
 - `apps/hivewiki-collector/dev/sealedsecret.yaml`
-- `infra/monitoring/prometheus/sealedsecret.yaml`
+- `infra/monitoring/secrets/resources/sealedsecret.yaml`
 
 ## Creating SealedSecrets
 
@@ -58,7 +58,7 @@ kubeseal \
   --controller-name=sealed-secrets \
   --controller-namespace=kube-system \
   -f infra/monitoring/prometheus/slack-webhook-secret.yaml \
-  -w infra/monitoring/prometheus/sealedsecret.yaml
+  -w infra/monitoring/secrets/resources/sealedsecret.yaml
 ```
 
 이 예시에서 SealedSecret이 생성하는 Secret은 아래 값을 유지해야 합니다.
