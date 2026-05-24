@@ -13,10 +13,49 @@ jobs:
       - name: Checkout
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
-      - name: Run Kubescape
+      - name: Build rendered app manifests
+        run: |
+          set -euo pipefail
+          mkdir -p .rendered/apps
+
+          render() {
+            local src="$1"
+            local out="$2"
+
+            if command -v kustomize >/dev/null 2>&1; then
+              kustomize build "$src" > "$out"
+            elif command -v kubectl >/dev/null 2>&1; then
+              kubectl kustomize "$src" > "$out"
+            else
+              echo "kustomize or kubectl is required to render manifests" >&2
+              exit 1
+            fi
+          }
+
+          render apps/hivewiki-web/overlays/dev .rendered/apps/hivewiki-web-dev.yaml
+          render apps/hivewiki-web/overlays/prod .rendered/apps/hivewiki-web-prod.yaml
+          render apps/hivewiki-collector/dev .rendered/apps/hivewiki-collector-dev.yaml
+
+      - name: Run Kubescape for rendered apps
         uses: kubescape/github-action@c9749b84d138c0cbbb702b258774954f5463b82e # v3.0.21
         with:
-          files: "."
+          files: ".rendered/apps"
+          severityThreshold: "high"
+          exceptions: ".kubescape/exceptions.json"
+          verbose: true
+
+      - name: Run Kubescape for Argo CD manifests
+        uses: kubescape/github-action@c9749b84d138c0cbbb702b258774954f5463b82e # v3.0.21
+        with:
+          files: "argocd"
+          severityThreshold: "high"
+          exceptions: ".kubescape/exceptions.json"
+          verbose: true
+
+      - name: Run Kubescape for infra manifests
+        uses: kubescape/github-action@c9749b84d138c0cbbb702b258774954f5463b82e # v3.0.21
+        with:
+          files: "infra"
           severityThreshold: "high"
           exceptions: ".kubescape/exceptions.json"
           verbose: true

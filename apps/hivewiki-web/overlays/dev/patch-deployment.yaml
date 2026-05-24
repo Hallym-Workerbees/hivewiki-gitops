@@ -13,14 +13,6 @@ spec:
       labels:
         environment: dev
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        runAsGroup: 10001
-        fsGroup: 10001
-        fsGroupChangePolicy: Always
-        seccompProfile:
-          type: RuntimeDefault
       nodeSelector:
         env: dev
         workload: app
@@ -53,14 +45,3 @@ spec:
                   value: test.hive-wiki.com
                 - name: X-Forwarded-Proto
                   value: https
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-            runAsNonRoot: true
-            runAsUser: 10001
-            runAsGroup: 10001
-            seccompProfile:
-              type: RuntimeDefault
