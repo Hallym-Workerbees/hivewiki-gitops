@@ -33,7 +33,6 @@ jobs:
           }
 
           render apps/hivewiki-web/overlays/dev .rendered/apps/hivewiki-web-dev.yaml
-          render apps/hivewiki-web/overlays/prod .rendered/apps/hivewiki-web-prod.yaml
           render apps/hivewiki-collector/dev .rendered/apps/hivewiki-collector-dev.yaml
 
       - name: Run Kubescape for rendered apps

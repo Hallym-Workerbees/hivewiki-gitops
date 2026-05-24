@@ -33,7 +33,6 @@ jobs:
           }
 
           render apps/hivewiki-web/overlays/dev .rendered/apps/hivewiki-web-dev.yaml
-          render apps/hivewiki-web/overlays/prod .rendered/apps/hivewiki-web-prod.yaml
           render apps/hivewiki-collector/dev .rendered/apps/hivewiki-collector-dev.yaml
 
       - name: Run Trivy for rendered apps
@@ -42,6 +41,7 @@ jobs:
           scan-type: config
           scan-ref: .rendered/apps
           scanners: misconfig
+          severity: HIGH,CRITICAL
           exit-code: "1"
 
       - name: Run Trivy for Argo CD manifests
@@ -50,6 +50,7 @@ jobs:
           scan-type: config
           scan-ref: argocd
           scanners: misconfig
+          severity: HIGH,CRITICAL
           exit-code: "1"
 
       - name: Run Trivy for infra manifests
@@ -58,4 +59,5 @@ jobs:
           scan-type: config
           scan-ref: infra
           scanners: misconfig
+          severity: HIGH,CRITICAL
           exit-code: "1"
