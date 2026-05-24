@@ -7,7 +7,55 @@ on:
 
 jobs:
   trivy:
-    uses: Hallym-Workerbees/hivewiki-ci/.github/workflows/trivy.yml@main
-    with:
-      scan_type: config
-      scanners: misconfig
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+
+      - name: Build rendered app manifests
+        run: |
+          set -euo pipefail
+          mkdir -p .rendered/apps
+
+          render() {
+            local src="$1"
+            local out="$2"
+
+            if command -v kustomize >/dev/null 2>&1; then
+              kustomize build "$src" > "$out"
+            elif command -v kubectl >/dev/null 2>&1; then
+              kubectl kustomize "$src" > "$out"
+            else
+              echo "kustomize or kubectl is required to render manifests" >&2
+              exit 1
+            fi
+          }
+
+          render apps/hivewiki-web/overlays/dev .rendered/apps/hivewiki-web-dev.yaml
+          render apps/hivewiki-web/overlays/prod .rendered/apps/hivewiki-web-prod.yaml
+          render apps/hivewiki-collector/dev .rendered/apps/hivewiki-collector-dev.yaml
+
+      - name: Run Trivy for rendered apps
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          scan-type: config
+          scan-ref: .rendered/apps
+          scanners: misconfig
+          exit-code: "1"
+
+      - name: Run Trivy for Argo CD manifests
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          scan-type: config
+          scan-ref: argocd
+          scanners: misconfig
+          exit-code: "1"
+
+      - name: Run Trivy for infra manifests
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          scan-type: config
+          scan-ref: infra
+          scanners: misconfig
+          exit-code: "1"
