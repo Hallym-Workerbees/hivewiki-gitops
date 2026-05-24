@@ -6,8 +6,6 @@ namespace: hivewiki-web-prod
 resources:
   - ../../base
   - namespace.yaml
-  - sealedsecret.yaml
-  - ciliumnetworkpolicy.yaml
 
 patches:
   - path: patch-configmap.yaml
