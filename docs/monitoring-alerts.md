@@ -9,6 +9,35 @@ Prometheus와 Alertmanager는 `prometheus-community/prometheus` Helm chart로 �
 - Helm values: `infra/monitoring/prometheus/values.yaml`
 - Slack webhook SealedSecret: `infra/monitoring/prometheus/sealedsecret.yaml`
 - Grafana Loki alert rules: `infra/monitoring/grafana/values.yaml`
+- Grafana dashboards: `infra/monitoring/grafana/dashboards/`
+
+## Collector Metrics Scrape
+
+HiveWiki collector는 `/metrics` endpoint를 노출하며, Prometheus annotation 기반으로 scrape합니다.
+
+collector dev 환경의 scrape 설정:
+
+- Workload namespace: `hivewiki-collector-dev`
+- Service: `apps/hivewiki-collector/dev/service.yaml`
+- Metrics path: `/metrics`
+- Metrics port: `8080`
+- Prometheus job: `hivewiki-collector`
+
+collector Deployment pod template과 Service에는 아래 annotation을 둡니다.
+
+```yaml
+prometheus.io/scrape: "true"
+prometheus.io/path: /metrics
+prometheus.io/port: "8080"
+```
+
+Prometheus Helm values의 `extraScrapeConfigs`에는 `role: endpoints` discovery를 사용하는
+`hivewiki-collector` job이 있습니다. 이 job은 `prometheus.io/scrape: "true"` annotation이 붙은
+`hivewiki-collector-dev/hivewiki-collector` Service만 keep하고, annotation의 path와 port를 scrape 주소로
+반영합니다.
+
+Grafana dashboard는 `infra/monitoring/grafana/dashboards/hivewiki-collector-dev.json`으로 관리합니다.
+기존 Grafana sidecar provisioning과 동일하게 `grafana_dashboard: "1"` label이 붙은 ConfigMap으로 생성됩니다.
 
 ## Alertmanager Integration
 
@@ -99,6 +128,13 @@ prod 리소스만 바라보는지 확인한 뒤 `env: prod` label을 부여합�
 | `WebAppDown` | critical | `hivewiki-web` | `3m` | `hivewiki_up{job="hivewiki-web"} == 0` |
 | `WebAppHigh5xxRate` | warning | `hivewiki-web` | `5m` | HiveWiki 5xx response rate is over `1%`, and response rate is over `1 rps` |
 | `WebAppHighLatencyP95` | warning | `hivewiki-web` | `5m` | `histogram_quantile(0.95, rate(hivewiki_http_request_duration_seconds_bucket[5m])) > 0.5` |
+| `CollectorScrapeDown` | critical | `hivewiki-collector` | `3m` | `up{job="hivewiki-collector"} == 0` |
+| `CollectorNoRecentSuccess` | warning | `hivewiki-collector` | `5m` | `time() - collector_last_success_timestamp{job="hivewiki-collector"} > 1800` |
+| `CollectorConsecutiveFailures` | critical | `hivewiki-collector` | `5m` | `collector_consecutive_failures{job="hivewiki-collector"} >= 3` |
+| `CollectorDispatchFailures` | warning | `hivewiki-collector` | `5m` | `increase(collector_dispatch_failed_total{job="hivewiki-collector"}[10m]) > 0` |
+| `CollectorLoopErrors` | warning | `hivewiki-collector` | `5m` | `increase(collector_loop_errors_total{job="hivewiki-collector"}[10m]) > 0` |
+| `CollectorPendingDocumentsHigh` | warning | `hivewiki-collector` | `15m` | `collector_pending_documents{job="hivewiki-collector"} > 100` |
+| `CollectorDeadDocumentsPresent` | warning | `hivewiki-collector` | `10m` | `collector_dead_documents{job="hivewiki-collector"} > 0` |
 
 ## 제외한 알림
 
