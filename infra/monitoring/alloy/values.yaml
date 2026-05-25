@@ -86,9 +86,11 @@ alloy:
     dockercontainers: true
 
 controller:
-  nodeSelector:
-    env: shared
-    workload: system
+  type: daemonset
+  tolerations:
+    - key: env
+      operator: Exists
+      effect: NoSchedule
 
 serviceMonitor:
   enabled: false
