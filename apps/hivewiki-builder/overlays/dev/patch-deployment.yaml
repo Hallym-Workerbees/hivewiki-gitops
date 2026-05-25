@@ -21,6 +21,9 @@ spec:
           effect: NoSchedule
       containers:
         - name: hivewiki-builder
+          env:
+            - name: HOME
+              value: /tmp
           resources:
             requests:
               cpu: 250m
