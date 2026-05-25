@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hivewiki-builder
+  labels:
+    environment: dev
+spec:
+  selector:
+    matchLabels:
+      environment: dev
+  template:
+    metadata:
+      labels:
+        environment: dev
+    spec:
+      nodeSelector:
+        env: dev
+        workload: app
+        nodepool: dev
+      tolerations:
+        - key: env
+          operator: Equal
+          value: dev
+          effect: NoSchedule
+      containers:
+        - name: hivewiki-builder
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
