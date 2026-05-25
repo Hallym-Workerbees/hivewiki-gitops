@@ -24,6 +24,18 @@ spec:
           env:
             - name: HOME
               value: /tmp
+            - name: USER
+              value: app
+            - name: LOGNAME
+              value: app
+            - name: STORM_WORK_DIR
+              value: /tmp/hivewiki-builder/storm
+            - name: DSP_CACHEDIR
+              value: /tmp/hivewiki-builder/dsp-cache
+            - name: TORCHINDUCTOR_CACHE_DIR
+              value: /tmp/hivewiki-builder/torchinductor-cache
+            - name: XDG_CACHE_HOME
+              value: /tmp/hivewiki-builder/.cache
           resources:
             requests:
               cpu: 250m
