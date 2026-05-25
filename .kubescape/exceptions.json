@@ -18,6 +18,14 @@
         "designatorType": "Attributes",
         "attributes": {
           "kind": "Deployment",
+          "namespace": "hivewiki-builder-dev",
+          "name": "hivewiki-builder"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "kind": "Deployment",
           "namespace": "hivewiki-collector-dev",
           "name": "hivewiki-collector"
         }
@@ -57,7 +65,7 @@
         "attributes": {
           "kind": "Deployment",
           "namespace": "hivewiki-builder-dev",
-          "name": "hivewiki-web"
+          "name": "hivewiki-builder"
         }
       }
     ],
