@@ -29,3 +29,14 @@ spec:
           manifestTargets:
             kustomize:
               name: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector"
+
+    - namePattern: "hivewiki-builder-dev"
+      images:
+        - alias: "hivewiki-builder-dev"
+          imageName: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-builder"
+          commonUpdateSettings:
+            updateStrategy: "newest-build"
+            allowTags: "regexp:^dev-[0-9a-f]{7}$"
+          manifestTargets:
+            kustomize:
+              name: "647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-builder"
