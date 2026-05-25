@@ -9,6 +9,10 @@ server:
   image:
     repository: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/quay/prometheus/prometheus
     pullPolicy: IfNotPresent
+  global:
+    evaluation_interval: 1m
+    scrape_interval: 1m
+    scrape_timeout: 10s
   alertmanagers:
     - static_configs:
         - targets:
@@ -85,10 +89,6 @@ prometheus-pushgateway:
 
 serverFiles:
   prometheus.yml:
-    global:
-      evaluation_interval: 1m
-      scrape_interval: 1m
-      scrape_timeout: 10s
     scrape_configs:
       - job_name: kubernetes-api-servers
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -389,11 +389,6 @@ serverFiles:
       - /etc/config/alerting_rules.yml
       - /etc/config/rules
       - /etc/config/alerts
-    alerting:
-      alertmanagers:
-        - static_configs:
-            - targets:
-                - prometheus-alertmanager.monitoring.svc.cluster.local:9093
   alerting_rules.yml:
     groups:
       - name: argocd.rules
