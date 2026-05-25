@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hivewiki-builder
+  labels:
+    app: hivewiki-builder
+    app.kubernetes.io/name: hivewiki-builder
+    app.kubernetes.io/part-of: hivewiki
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: hivewiki-builder
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: hivewiki-builder
+      labels:
+        app: hivewiki-builder
+        app.kubernetes.io/name: hivewiki-builder
+        app.kubernetes.io/part-of: hivewiki
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Always
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: Always
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: hivewiki-builder
+          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-builder:dev-837670c
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: hivewiki-builder-env
+            - secretRef:
+                name: hivewiki-builder-secrets
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: tmp
+          emptyDir: {}
