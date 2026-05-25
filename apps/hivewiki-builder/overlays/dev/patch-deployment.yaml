@@ -5,9 +5,6 @@ metadata:
   labels:
     environment: dev
 spec:
-  selector:
-    matchLabels:
-      environment: dev
   template:
     metadata:
       labels:
