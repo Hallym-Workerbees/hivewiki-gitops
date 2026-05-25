@@ -40,6 +40,11 @@ spec:
         - name: hivewiki-builder
           image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-builder:dev-837670c
           imagePullPolicy: IfNotPresent
+          command:
+            - uv
+            - run
+            - python
+            - consumer.py
           envFrom:
             - configMapRef:
                 name: hivewiki-builder-env
