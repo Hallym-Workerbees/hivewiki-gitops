@@ -12,6 +12,18 @@ spec:
       environment: dev
   egress:
     - toFQDNs:
+      - matchName: oauth2.googleapis.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: github.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
       - matchName: hivewiki-dev-mdqrku.serverless.apn2.cache.amazonaws.com
       toPorts:
       - ports:
