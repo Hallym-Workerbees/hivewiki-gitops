@@ -12,6 +12,12 @@ spec:
       environment: dev
   egress:
     - toFQDNs:
+      - matchName: openidconnect.googleapis.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
       - matchName: oauth2.googleapis.com
       toPorts:
       - ports:
