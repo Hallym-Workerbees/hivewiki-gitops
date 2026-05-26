@@ -82,6 +82,15 @@ lokiCanary:
     registry: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com
     repository: docker-hub/grafana/loki-canary
     pullPolicy: IfNotPresent
+  tolerations:
+    - key: "env"
+      operator: "Equal"
+      value: "dev"
+      effect: "NoSchedule"
+    - key: "env"
+      operator: "Equal"
+      value: "prod"
+      effect: "NoSchedule"
 
 test:
   enabled: false
