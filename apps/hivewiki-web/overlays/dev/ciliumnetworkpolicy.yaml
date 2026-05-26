@@ -24,6 +24,12 @@ spec:
         - port: "443"
           protocol: TCP
     - toFQDNs:
+      - matchName: api.github.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
       - matchName: github.com
       toPorts:
       - ports:
