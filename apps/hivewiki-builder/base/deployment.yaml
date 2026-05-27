@@ -45,28 +45,6 @@ spec:
                 name: hivewiki-builder-env
             - secretRef:
                 name: hivewiki-builder-secrets
-          ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
-          startupProbe:
-            tcpSocket:
-              port: http
-            periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 24
-          livenessProbe:
-            tcpSocket:
-              port: http
-            periodSeconds: 10
-            timeoutSeconds: 2
-            failureThreshold: 3
-          readinessProbe:
-            tcpSocket:
-              port: http
-            periodSeconds: 10
-            timeoutSeconds: 2
-            failureThreshold: 3
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
