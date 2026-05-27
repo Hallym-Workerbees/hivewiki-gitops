@@ -17,4 +17,4 @@ patches:
 
 images:
   - name: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web
-    newTag: prod-7726876
+    newTag: prod-7efa614
