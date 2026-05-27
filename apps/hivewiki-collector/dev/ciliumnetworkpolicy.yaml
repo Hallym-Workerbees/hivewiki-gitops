@@ -12,6 +12,12 @@ spec:
       environment: dev
   egress:
     - toFQDNs:
+      - matchName: www.hallym.ac.kr
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
       - matchName: hivewiki-dev-mdqrku.serverless.apn2.cache.amazonaws.com
       toPorts:
       - ports:
