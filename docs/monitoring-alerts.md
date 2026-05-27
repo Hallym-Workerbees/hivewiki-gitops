@@ -89,10 +89,10 @@ Alert rule은 가능한 한 아래 labels를 포함합니다.
 
 ## Environment Strategy
 
-현재 활성 alert rule은 `dev` 환경 기준입니다. 아직 `prod` 워크로드가 없으므로 prod alert rule은 만들지 않습니다.
-대신 모든 alert에 `env` label을 유지해서 나중에 prod가 추가될 때 routing과 grouping을 분리할 수 있게 합니다.
+HiveWiki web과 collector alert rule은 dev/prod 환경을 함께 대상으로 삼습니다.
+환경별 metric에는 scrape relabel 단계에서 Service의 `environment` label을 `env` label로 붙입니다.
 
-prod 환경을 추가할 때는 아래 항목을 먼저 확인합니다.
+prod 환경을 추가하거나 alert 범위를 넓힐 때는 아래 항목을 먼저 확인합니다.
 
 - prod namespace 이름
 - HiveWiki web app의 prod Prometheus job 또는 namespace label
