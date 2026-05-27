@@ -11,7 +11,7 @@ spec:
       name: alb-config
       group: gateway.k8s.aws
   listeners:
-    - name: http
+    - name: http-prod
       protocol: HTTP
       port: 80
       hostname: www.hive-wiki.com
@@ -21,7 +21,7 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: hivewiki-web-prod
-    - name: https
+    - name: https-prod
       protocol: HTTPS
       port: 443
       hostname: www.hive-wiki.com
@@ -31,7 +31,7 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: hivewiki-web-prod
-    - name: http
+    - name: http-dev
       protocol: HTTP
       port: 80
       hostname: test.hive-wiki.com
@@ -41,7 +41,7 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: hivewiki-web-dev
-    - name: https
+    - name: https-dev
       protocol: HTTPS
       port: 443
       hostname: test.hive-wiki.com

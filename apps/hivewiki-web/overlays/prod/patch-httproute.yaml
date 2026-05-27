@@ -5,5 +5,12 @@ metadata:
   labels:
     environment: prod
 spec:
+  parentRefs:
+    - name: my-alb-gateway
+      namespace: kube-system
+      sectionName: http-prod
+    - name: my-alb-gateway
+      namespace: kube-system
+      sectionName: https-prod
   hostnames:
     - www.hive-wiki.com
