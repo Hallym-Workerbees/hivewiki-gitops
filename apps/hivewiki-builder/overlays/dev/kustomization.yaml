@@ -5,7 +5,6 @@ namespace: hivewiki-builder-dev
 
 resources:
   - ../../base
-  - ciliumnetworkpolicy.yaml
   - namespace.yaml
   - sealedsecret.yaml
 
