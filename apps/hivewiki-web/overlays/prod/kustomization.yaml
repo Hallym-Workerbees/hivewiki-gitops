@@ -7,6 +7,7 @@ resources:
   - ../../base
   - ciliumnetworkpolicy.yaml
   - namespace.yaml
+  - scaledobject.yaml
   - sealedsecret.yaml
   - serviceaccount.yaml
 
@@ -18,4 +19,4 @@ patches:
 
 images:
   - name: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web
-    newTag: prod-7efa614
+    newTag: prod-8f4a8d5

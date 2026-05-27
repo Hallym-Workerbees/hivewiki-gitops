@@ -2,12 +2,24 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: hivewiki-web
+  namespace: hivewiki-web-prod
 spec:
   scaleTargetRef:
     name: hivewiki-web
+  minReplicaCount: 2
+  maxReplicaCount: 20
+  pollingInterval: 30
+  cooldownPeriod: 300
   triggers:
   - type: cpu
     metricType: Utilization
     metadata:
       value: "75"
       containerName: hivewiki-web
+  - type: prometheus
+    metricType: AverageValue
+    metadata:
+      serverAddress: http://prometheus-server.monitoring.svc.cluster.local
+      metricName: hivewiki_web_rps
+      query: sum(rate(hivewiki_http_requests_total{namespace="hivewiki-web-prod",service="hivewiki-web"}[2m]))
+      threshold: "10"
