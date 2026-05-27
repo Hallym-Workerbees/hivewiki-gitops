@@ -26,7 +26,6 @@ spec:
         app.kubernetes.io/name: hivewiki-web
         app.kubernetes.io/part-of: hivewiki
     spec:
-      serviceAccountName: hivewiki-web
       automountServiceAccountToken: false
       restartPolicy: Always
       securityContext:
