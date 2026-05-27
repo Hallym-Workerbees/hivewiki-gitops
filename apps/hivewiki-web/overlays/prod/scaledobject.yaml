@@ -1,0 +1,13 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: hivewiki-web
+spec:
+  scaleTargetRef:
+    name: hivewiki-web
+  triggers:
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "75"
+      containerName: hivewiki-web

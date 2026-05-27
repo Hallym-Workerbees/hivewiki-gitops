@@ -56,6 +56,15 @@ configMapGenerator:
       labels:
         grafana_dashboard: "1"
 
+  - name: grafana-dashboard-hivewiki-web-prod
+    namespace: monitoring
+    files:
+      - hivewiki-web-prod.json
+    options:
+      disableNameSuffixHash: true
+      labels:
+        grafana_dashboard: "1"
+
   - name: grafana-dashboard-hivewiki-collector-dev
     namespace: monitoring
     files:
