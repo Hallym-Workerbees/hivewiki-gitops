@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hivewiki-collector
+  namespace: hivewiki-collector-prod
+  labels:
+    app: hivewiki-collector
+    app.kubernetes.io/name: hivewiki-collector
+    app.kubernetes.io/part-of: hivewiki
+    environment: prod
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+spec:
+  selector:
+    app: hivewiki-collector
+    environment: prod
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: 8080
+      targetPort: http

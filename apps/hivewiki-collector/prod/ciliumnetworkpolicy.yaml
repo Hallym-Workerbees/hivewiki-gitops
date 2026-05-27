@@ -1,0 +1,42 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hivewiki-collector
+  namespace: hivewiki-collector-prod
+spec:
+  endpointSelector:
+    matchLabels:
+      app: hivewiki-collector
+      app.kubernetes.io/name: hivewiki-collector
+      app.kubernetes.io/part-of: hivewiki
+      environment: prod
+  egress:
+    - toFQDNs:
+      - matchName: www.hallym.ac.kr
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: hivewiki-prod-mdqrku.serverless.apn2.cache.amazonaws.com
+      toPorts:
+      - ports:
+        - port: "6379"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: hivewiki-prod.c7kkg8a0sdsw.ap-northeast-2.rds.amazonaws.com
+      toPorts:
+      - ports:
+        - port: "5432"
+          protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": kube-system
+            "k8s:k8s-app": kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"

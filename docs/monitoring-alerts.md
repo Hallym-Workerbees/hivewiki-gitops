@@ -15,10 +15,10 @@ Prometheus와 Alertmanager는 `prometheus-community/prometheus` Helm chart로 �
 
 HiveWiki collector는 `/metrics` endpoint를 노출하며, Prometheus annotation 기반으로 scrape합니다.
 
-collector dev 환경의 scrape 설정:
+collector dev/prod 환경의 scrape 설정:
 
-- Workload namespace: `hivewiki-collector-dev`
-- Service: `apps/hivewiki-collector/dev/service.yaml`
+- Workload namespaces: `hivewiki-collector-dev`, `hivewiki-collector-prod`
+- Services: `apps/hivewiki-collector/dev/service.yaml`, `apps/hivewiki-collector/prod/service.yaml`
 - Metrics path: `/metrics`
 - Metrics port: `8080`
 - Prometheus job: `hivewiki-collector`
@@ -33,10 +33,11 @@ prometheus.io/port: "8080"
 
 Prometheus Helm values의 `extraScrapeConfigs`에는 `role: endpoints` discovery를 사용하는
 `hivewiki-collector` job이 있습니다. 이 job은 `prometheus.io/scrape: "true"` annotation이 붙은
-`hivewiki-collector-dev/hivewiki-collector` Service만 keep하고, annotation의 path와 port를 scrape 주소로
+`hivewiki-collector-(dev|prod)/hivewiki-collector` Service만 keep하고, annotation의 path와 port를 scrape 주소로
 반영합니다.
 
-Grafana dashboard는 `infra/monitoring/grafana/dashboards/hivewiki-collector-dev.json`으로 관리합니다.
+Grafana dashboards는 `infra/monitoring/grafana/dashboards/hivewiki-collector-dev.json`과
+`infra/monitoring/grafana/dashboards/hivewiki-collector-prod.json`으로 관리합니다.
 기존 Grafana sidecar provisioning과 동일하게 `grafana_dashboard: "1"` label이 붙은 ConfigMap으로 생성됩니다.
 
 ## Alertmanager Integration
