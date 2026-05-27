@@ -129,7 +129,6 @@ prod 리소스만 바라보는지 확인한 뒤 `env: prod` label을 부여합�
 | `WebAppHigh5xxRate` | warning | `hivewiki-web` | `5m` | HiveWiki 5xx response rate is over `1%`, and response rate is over `1 rps` |
 | `WebAppHighLatencyP95` | warning | `hivewiki-web` | `5m` | `histogram_quantile(0.95, rate(hivewiki_http_request_duration_seconds_bucket[5m])) > 0.5` |
 | `CollectorScrapeDown` | critical | `hivewiki-collector` | `3m` | `up{job="hivewiki-collector"} == 0` |
-| `CollectorNoRecentSuccess` | warning | `hivewiki-collector` | `5m` | `time() - collector_last_success_timestamp{job="hivewiki-collector"} > 1800` |
 | `CollectorConsecutiveFailures` | critical | `hivewiki-collector` | `5m` | `collector_consecutive_failures{job="hivewiki-collector"} >= 3` |
 | `CollectorDispatchFailures` | warning | `hivewiki-collector` | `5m` | `increase(collector_dispatch_failed_total{job="hivewiki-collector"}[10m]) > 0` |
 | `CollectorLoopErrors` | warning | `hivewiki-collector` | `5m` | `increase(collector_loop_errors_total{job="hivewiki-collector"}[10m]) > 0` |
@@ -140,6 +139,9 @@ prod 리소스만 바라보는지 확인한 뒤 `env: prod` label을 부여합�
 
 `kube-green` 알림은 Prometheus rule에서 제외합니다. 현재 kube-green은 필요한 metric을 노출하지 않으므로
 Loki 로그 기반 alert로 별도 처리합니다.
+
+`CollectorNoRecentSuccess`는 정의하지 않습니다. collector 수집 주기는 비용과 운영 상황에 따라 30분보다 길게
+설정될 수 있고, 문서 생성 후 삭제하는 흐름도 있으므로 최근 성공 수집 시간만으로 장애를 판단하지 않습니다.
 
 `KarpenterUnschedulablePods`는 정의하지 않습니다. 현재 사용 가능한 Karpenter metric에는
 `karpenter_scheduler_unschedulable_pods_count`처럼 unschedulable pod 수를 직접 나타내는 metric이 없습니다.
