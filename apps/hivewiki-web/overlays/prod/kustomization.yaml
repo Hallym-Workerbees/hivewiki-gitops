@@ -8,6 +8,7 @@ resources:
   - ciliumnetworkpolicy.yaml
   - namespace.yaml
   - sealedsecret.yaml
+  - serviceaccount.yaml
 
 patches:
   - path: patch-configmap.yaml
