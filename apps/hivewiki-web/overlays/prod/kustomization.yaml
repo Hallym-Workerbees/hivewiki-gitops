@@ -5,7 +5,9 @@ namespace: hivewiki-web-prod
 
 resources:
   - ../../base
+  - ciliumnetworkpolicy.yaml
   - namespace.yaml
+  - sealedsecret.yaml
 
 patches:
   - path: patch-configmap.yaml
@@ -15,4 +17,4 @@ patches:
 
 images:
   - name: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web
-    newTag: dev-837670c
+    newTag: prod-7726876

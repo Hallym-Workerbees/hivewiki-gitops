@@ -12,13 +12,37 @@ spec:
       environment: prod
   egress:
     - toFQDNs:
-      - matchName: ""
+      - matchName: openidconnect.googleapis.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: oauth2.googleapis.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: api.github.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: github.com
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: hivewiki-prod-mdqrku.serverless.apn2.cache.amazonaws.com
       toPorts:
       - ports:
         - port: "6379"
           protocol: TCP
     - toFQDNs:
-      - matchName: ""
+      - matchName: hivewiki-prod.c7kkg8a0sdsw.ap-northeast-2.rds.amazonaws.com
       toPorts:
       - ports:
         - port: "5432"
