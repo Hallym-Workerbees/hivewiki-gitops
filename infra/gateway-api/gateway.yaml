@@ -20,7 +20,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              kubernetes.io/metadata.name: hivewiki-web-dev
+              kubernetes.io/metadata.name: hivewiki-web-prod
     - name: https
       protocol: HTTPS
       port: 443
@@ -30,7 +30,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              kubernetes.io/metadata.name: hivewiki-web-dev
+              kubernetes.io/metadata.name: hivewiki-web-prod
     - name: http
       protocol: HTTP
       port: 80
