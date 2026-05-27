@@ -8,13 +8,13 @@ resources:
   - ciliumnetworkpolicy.yaml
   - namespace.yaml
   - sealedsecret.yaml
+  - serviceaccount.yaml
 
 patches:
   - path: patch-configmap.yaml
   - path: patch-deployment.yaml
   - path: patch-service.yaml
   - path: patch-httproute.yaml
-  - path: patch-serviceaccount.yaml
 
 images:
   - name: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-web
