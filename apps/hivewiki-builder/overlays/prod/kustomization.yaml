@@ -7,6 +7,7 @@ resources:
   - ../../base
   - namespace.yaml
   - sealedsecrets.yaml
+  - serviceaccount.yaml
 
 patches:
   - path: patch-configmap.yaml
