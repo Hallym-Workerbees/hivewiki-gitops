@@ -18,14 +18,11 @@ docs/                 # 운영 문서
 
 ## Applications
 
-현재 애플리케이션 환경은 앱별로 `dev`/`prod`를 함께 관리합니다.
+현재 애플리케이션 환경은 `dev` 기준으로 관리됩니다.
 
 | Application | Namespace | Path |
 | --- | --- | --- |
-| `hivewiki-web-dev` | `hivewiki-web-dev` | `apps/hivewiki-web/overlays/dev` |
-| `hivewiki-web-prod` | `hivewiki-web-prod` | `apps/hivewiki-web/overlays/prod` |
-| `hivewiki-builder-dev` | `hivewiki-builder-dev` | `apps/hivewiki-builder/overlays/dev` |
-| `hivewiki-builder-prod` | `hivewiki-builder-prod` | `apps/hivewiki-builder/overlays/prod` |
+| `hivewiki-web-dev` | `hivewiki-web-dev` | `apps/hivewiki-web/dev` |
 | `hivewiki-collector-dev` | `hivewiki-collector-dev` | `apps/hivewiki-collector/dev` |
 | `hivewiki-collector-prod` | `hivewiki-collector-prod` | `apps/hivewiki-collector/prod` |
 
