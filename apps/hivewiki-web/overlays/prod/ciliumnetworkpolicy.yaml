@@ -20,6 +20,21 @@ spec:
           protocol: TCP
         - port: "80"
           protocol: TCP
+    - toEntities:
+      - host
+      toPorts:
+      - ports:
+        - port: "80"
+          protocol: TCP
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
+      - matchName: s3.ap-northeast-2.amazonaws.com
+      - matchPattern: "*.s3.ap-northeast-2.amazonaws.com"
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
     - toFQDNs:
       - matchName: openidconnect.googleapis.com
       toPorts:
