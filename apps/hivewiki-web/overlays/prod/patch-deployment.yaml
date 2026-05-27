@@ -13,6 +13,7 @@ spec:
       labels:
         environment: prod
     spec:
+      serviceAccountName: hivewiki-web-prod
       nodeSelector:
         env: prod
         workload: app
