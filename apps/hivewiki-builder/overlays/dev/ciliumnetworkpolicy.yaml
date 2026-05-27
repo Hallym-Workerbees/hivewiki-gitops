@@ -11,6 +11,12 @@ spec:
       environment: dev
   egress:
     - toFQDNs:
+      - matchName: huggingface.co
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
       - matchName: en.wikipedia.org
       toPorts:
       - ports:
