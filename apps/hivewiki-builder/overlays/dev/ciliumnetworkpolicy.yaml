@@ -11,6 +11,12 @@ spec:
       environment: dev
   egress:
     - toFQDNs:
+      - matchName: en.wikipedia.org
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+    - toFQDNs:
       - matchName: api.openai.com
       toPorts:
       - ports:
