@@ -76,7 +76,7 @@ alerting:
     groups:
       - orgId: 1
         name: kube-green-loki-events
-        folder: Monitoring
+        folder: General
         interval: 1m
         rules:
           - uid: kube-green-wake-up
