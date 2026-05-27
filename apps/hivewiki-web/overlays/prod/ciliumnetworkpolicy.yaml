@@ -11,6 +11,13 @@ spec:
       app.kubernetes.io/part-of: hivewiki
       environment: prod
   egress:
+    # AWS Credentials
+    - toCIDR:
+      - matchName: 169.254.170.23/32
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
     - toFQDNs:
       - matchName: openidconnect.googleapis.com
       toPorts:
