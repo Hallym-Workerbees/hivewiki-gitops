@@ -13,7 +13,7 @@ spec:
   egress:
     # AWS Credentials
     - toCIDR:
-      - matchName: 169.254.170.23/32
+      - 169.254.170.23/32
       toPorts:
       - ports:
         - port: "443"
