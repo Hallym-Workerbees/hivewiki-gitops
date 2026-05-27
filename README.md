@@ -45,6 +45,7 @@ docs/                 # 운영 문서
 
 - [Contributing](docs/contributing.md): 브랜치, 커밋 메시지, Secret 관리 규칙
 - [Monitoring alerts](docs/monitoring-alerts.md): Prometheus Alertmanager 연동과 알림 기준
+- [Grafana dashboard attribution](docs/grafana-dashboard-attribution.md): Grafana 대시보드 템플릿 출처와 라이선스 제외 범위
 
 ## Local Setup
 
