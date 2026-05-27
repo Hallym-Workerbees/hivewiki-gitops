@@ -359,17 +359,6 @@ serverFiles:
               summary: HiveWiki collector scrape target is down
               description: HiveWiki collector target {{ $labels.instance }} has been down for more than 3 minutes.
 
-          - alert: CollectorNoRecentSuccess
-            expr: time() - collector_last_success_timestamp{job="hivewiki-collector"} > 1800
-            for: 5m
-            labels:
-              severity: warning
-              service: hivewiki-collector
-              env: dev
-            annotations:
-              summary: HiveWiki collector has no recent successful run
-              description: HiveWiki collector instance {{ $labels.instance }} has not reported a successful run in the last 30 minutes.
-
           - alert: CollectorConsecutiveFailures
             expr: collector_consecutive_failures{job="hivewiki-collector"} >= 3
             for: 5m
