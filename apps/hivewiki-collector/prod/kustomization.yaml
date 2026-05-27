@@ -11,4 +11,4 @@ resources:
 
 images:
   - name: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector
-    newTag: prod-8f7fd7c
+    newTag: prod-ab28266

@@ -44,7 +44,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: hivewiki-collector
-          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:prod-8f7fd7c
+          image: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-collector:prod-ab28266
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
