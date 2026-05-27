@@ -301,12 +301,11 @@ serverFiles:
       - name: hivewiki-web.rules
         rules:
           - alert: WebAppDown
-            expr: hivewiki_up{job="hivewiki-web"} == 0
+            expr: hivewiki_up{job=~"hivewiki-web|hivewiki-web-prod"} == 0
             for: 3m
             labels:
               severity: critical
               service: hivewiki-web
-              env: dev
             annotations:
               summary: HiveWiki web app is down
               description: HiveWiki web app instance {{ $labels.instance }} has reported down for more than 3 minutes.
@@ -314,17 +313,25 @@ serverFiles:
           - alert: WebAppHigh5xxRate
             expr: |
               (
-                sum(rate(hivewiki_http_responses_total{job="hivewiki-web", status_code=~"5.."}[5m]))
+                sum by (env) (
+                  rate(hivewiki_http_responses_total{job=~"hivewiki-web|hivewiki-web-prod", status_code=~"5.."}[5m])
+                )
                 /
-                clamp_min(sum(rate(hivewiki_http_responses_total{job="hivewiki-web"}[5m])), 1)
+                clamp_min(
+                  sum by (env) (
+                    rate(hivewiki_http_responses_total{job=~"hivewiki-web|hivewiki-web-prod"}[5m])
+                  ),
+                  1
+                )
               ) > 0.01
               and
-              sum(rate(hivewiki_http_responses_total{job="hivewiki-web"}[5m])) > 1
+              sum by (env) (
+                rate(hivewiki_http_responses_total{job=~"hivewiki-web|hivewiki-web-prod"}[5m])
+              ) > 1
             for: 5m
             labels:
               severity: warning
               service: hivewiki-web
-              env: dev
             annotations:
               summary: HiveWiki web app 5xx rate is high
               description: HiveWiki web app 5xx error rate has been above 1% with more than 1 response per second for more than 5 minutes.
@@ -333,15 +340,14 @@ serverFiles:
             expr: |
               histogram_quantile(
                 0.95,
-                sum by (le) (
-                  rate(hivewiki_http_request_duration_seconds_bucket{job="hivewiki-web"}[5m])
+                sum by (env, le) (
+                  rate(hivewiki_http_request_duration_seconds_bucket{job=~"hivewiki-web|hivewiki-web-prod"}[5m])
                 )
               ) > 0.5
             for: 5m
             labels:
               severity: warning
               service: hivewiki-web
-              env: dev
             annotations:
               summary: HiveWiki web app p95 latency is high
               description: HiveWiki web app p95 latency has been above 500ms for more than 5 minutes.
@@ -354,7 +360,6 @@ serverFiles:
             labels:
               severity: critical
               service: hivewiki-collector
-              env: dev
             annotations:
               summary: HiveWiki collector scrape target is down
               description: HiveWiki collector target {{ $labels.instance }} has been down for more than 3 minutes.
@@ -365,7 +370,6 @@ serverFiles:
             labels:
               severity: critical
               service: hivewiki-collector
-              env: dev
             annotations:
               summary: HiveWiki collector is failing consecutively
               description: HiveWiki collector instance {{ $labels.instance }} has reported at least 3 consecutive failures for more than 5 minutes.
@@ -376,7 +380,6 @@ serverFiles:
             labels:
               severity: warning
               service: hivewiki-collector
-              env: dev
             annotations:
               summary: HiveWiki collector dispatch failures detected
               description: HiveWiki collector instance {{ $labels.instance }} has dispatch failures in the last 10 minutes.
@@ -387,7 +390,6 @@ serverFiles:
             labels:
               severity: warning
               service: hivewiki-collector
-              env: dev
             annotations:
               summary: HiveWiki collector loop errors detected
               description: HiveWiki collector instance {{ $labels.instance }} has loop errors in the last 10 minutes.
@@ -398,7 +400,6 @@ serverFiles:
             labels:
               severity: warning
               service: hivewiki-collector
-              env: dev
             annotations:
               summary: HiveWiki collector pending document backlog is high
               description: HiveWiki collector instance {{ $labels.instance }} has more than 100 pending documents for more than 15 minutes.
@@ -409,7 +410,6 @@ serverFiles:
             labels:
               severity: warning
               service: hivewiki-collector
-              env: dev
             annotations:
               summary: HiveWiki collector dead documents are present
               description: HiveWiki collector instance {{ $labels.instance }} has dead documents for more than 10 minutes.
@@ -451,7 +451,7 @@ extraScrapeConfigs: |
         action: keep
 
       - source_labels: [__meta_kubernetes_namespace]
-        regex: hivewiki-collector-dev
+        regex: hivewiki-collector-(dev|prod)
         action: keep
 
       - source_labels: [__meta_kubernetes_service_name]
@@ -509,6 +509,9 @@ extraScrapeConfigs: |
       - source_labels: [__meta_kubernetes_service_name]
         target_label: service
 
+      - source_labels: [__meta_kubernetes_service_label_environment]
+        target_label: env
+
   - job_name: hivewiki-web-prod
     metrics_path: /metrics/
     scrape_interval: 15s
@@ -538,3 +541,6 @@ extraScrapeConfigs: |
 
       - source_labels: [__meta_kubernetes_service_name]
         target_label: service
+
+      - source_labels: [__meta_kubernetes_service_label_environment]
+        target_label: env

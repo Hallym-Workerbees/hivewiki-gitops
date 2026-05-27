@@ -73,3 +73,12 @@ configMapGenerator:
       disableNameSuffixHash: true
       labels:
         grafana_dashboard: "1"
+
+  - name: grafana-dashboard-hivewiki-collector-prod
+    namespace: monitoring
+    files:
+      - hivewiki-collector-prod.json
+    options:
+      disableNameSuffixHash: true
+      labels:
+        grafana_dashboard: "1"

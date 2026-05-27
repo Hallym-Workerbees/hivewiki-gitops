@@ -24,6 +24,7 @@ docs/                 # 운영 문서
 | --- | --- | --- |
 | `hivewiki-web-dev` | `hivewiki-web-dev` | `apps/hivewiki-web/dev` |
 | `hivewiki-collector-dev` | `hivewiki-collector-dev` | `apps/hivewiki-collector/dev` |
+| `hivewiki-collector-prod` | `hivewiki-collector-prod` | `apps/hivewiki-collector/prod` |
 
 ## Infrastructure
 
