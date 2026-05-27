@@ -33,6 +33,7 @@ jobs:
           }
 
           render apps/hivewiki-builder/overlays/dev .rendered/apps/hivewiki-builder-dev.yaml
+          render apps/hivewiki-builder/overlays/prod .rendered/apps/hivewiki-builder-prod.yaml
           render apps/hivewiki-web/overlays/dev .rendered/apps/hivewiki-web-dev.yaml
           render apps/hivewiki-collector/dev .rendered/apps/hivewiki-collector-dev.yaml
 

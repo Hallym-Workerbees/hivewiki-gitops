@@ -1,12 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: hivewiki-builder-dev
+namespace: hivewiki-builder-prod
 
 resources:
   - ../../base
   - namespace.yaml
-  - sealedsecret.yaml
+  - sealedsecrets.yaml
   - serviceaccount.yaml
 
 patches:
@@ -15,4 +15,4 @@ patches:
 
 images:
   - name: 647502392199.dkr.ecr.ap-northeast-2.amazonaws.com/hivewiki-builder
-    newTag: dev-cafd640
+    newTag: prod-7092866

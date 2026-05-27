@@ -3,22 +3,25 @@ kind: Deployment
 metadata:
   name: hivewiki-builder
   labels:
-    environment: dev
+    environment: prod
 spec:
+  selector:
+    matchLabels:
+      environment: prod
   template:
     metadata:
       labels:
-        environment: dev
+        environment: prod
     spec:
-      serviceAccountName: hivewiki-builder-dev
+      serviceAccountName: hivewiki-builder-prod
       nodeSelector:
-        env: dev
+        env: prod
         workload: app
-        nodepool: dev
+        nodepool: prod
       tolerations:
         - key: env
           operator: Equal
-          value: dev
+          value: prod
           effect: NoSchedule
       containers:
         - name: hivewiki-builder
