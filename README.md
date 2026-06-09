@@ -1,5 +1,7 @@
 # HiveWiki GitOps
 
+🏆 2025 한림대학교 캡스톤디자인 경진대회 금상 수상 프로젝트
+
 HiveWiki GitOps 레포지토리는 HiveWiki 프로젝트의 Kubernetes 배포 구성을 관리합니다.
 ArgoCD를 사용해 애플리케이션, 공통 인프라, 모니터링 구성을 GitOps 방식으로 동기화합니다.
 
